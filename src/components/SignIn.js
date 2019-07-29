@@ -47,10 +47,9 @@ export default function SignIn() {
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
+            id="username"
+            label="Username"
+            name="username"
             autoFocus
           />
           <TextField
@@ -64,7 +63,7 @@ export default function SignIn() {
             id="password"
             autoComplete="current-password"
           />
-   
+          <Link to='/addressbook'>
           <Button
             type="submit"
             fullWidth
@@ -73,7 +72,8 @@ export default function SignIn() {
             className={classes.submit}
           >
             Sign In
-          </Button>            
+          </Button>
+          </Link>            
             <div style={{
                 display: 'flex',
                 justifyContent: 'flex-end'

@@ -1,5 +1,10 @@
 import React from 'react';
 import MaterialTable from 'material-table';
+import ButtonAppBar from './Header';
+import { Container } from '@material-ui/core';
+
+// import { makeStyles } from '@material-ui/core/styles';
+
 
 export default function AddressBook() {
   const [state, setState] = React.useState({
@@ -25,17 +30,26 @@ export default function AddressBook() {
   });
 
   return (
+    <React.Fragment>
+    <ButtonAppBar />
+    <Container 
+    maxWidth='lg'
+    style={{
+      marginTop: '40px'
+    }}
+    >
     <MaterialTable
-      title="Address Book"
+      title="Contact"
       columns={state.columns}
       data={state.data}
+
       editable={{
         onRowAdd: newData =>
           new Promise(resolve => {
             setTimeout(() => {
               resolve();
               const data = [...state.data];
-              data.push(newData);
+              data.unshift(newData);
               setState({ ...state, data });
             }, 600);
           }),
@@ -59,5 +73,7 @@ export default function AddressBook() {
           }),
       }}
     />
+    </Container>
+    </React.Fragment>
   );
 }
