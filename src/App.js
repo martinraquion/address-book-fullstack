@@ -1,16 +1,16 @@
 import React from 'react';
-// import logo from './logo.svg';
 import './App.css';
-import SignIn from './components/SignIn'
-import Register from './components/Register'
+
+import {HashRouter} from 'react-router-dom';
+import Routes from './Routes';
+
 function App() {
   return (
     <React.Fragment>
-        <SignIn />
-        {/* <Register /> */}
-    </React.Fragment>
-    
-    
+      <HashRouter>
+      <Routes />
+      </HashRouter>
+    </React.Fragment>    
   );
 }
 

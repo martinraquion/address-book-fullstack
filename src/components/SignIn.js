@@ -2,10 +2,10 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import {Link} from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
   '@global': {
@@ -14,8 +14,8 @@ const useStyles = makeStyles(theme => ({
     },
   },
   paper: {
-    marginTop: theme.spacing(8),
-    display: 'flex',
+    marginTop: theme.spacing(20),
+    display: 'flex',    
     flexDirection: 'column',
     alignItems: 'center',
   },
@@ -33,6 +33,7 @@ export default function SignIn() {
   const classes = useStyles();
 
   return (
+
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
@@ -77,7 +78,7 @@ export default function SignIn() {
                 display: 'flex',
                 justifyContent: 'flex-end'
             }}>
-                <Link href="#">
+                <Link to='/register'>
                 {"Don't have an account? Sign Up"}
               </Link>
             </div>
@@ -85,5 +86,6 @@ export default function SignIn() {
       </div>
    
     </Container>
+
   );
 }
