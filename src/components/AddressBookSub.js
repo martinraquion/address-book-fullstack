@@ -11,6 +11,10 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
+// import Create from '@material-ui/icons/CreateOutlined'
+import DeleteOutlined from '@material-ui/icons/DeleteSweepOutlined'
+// import { flexbox } from '@material-ui/system';
+import SimpleModal from './ContactModal'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -50,18 +54,24 @@ export default function AddressBookSub() {
     }}
     >
 
-
-<Paper className={classes.root}>
-      <Typography className={classes.searchbar}>
+<Typography className={classes.searchbar}>
           <TextField placeholder='Search' />
       </Typography>
+<Paper className={classes.root}>
+     
+    
       <Table className={classes.table}>
         <TableHead>
           <TableRow>
             <TableCell >Last Name</TableCell>
             <TableCell align="left">First Name</TableCell>
-            <TableCell align="right">Phone Number</TableCell>
-            <TableCell align="right">Actions</TableCell>
+            <TableCell>Phone Number</TableCell>
+            <TableCell 
+            style={{
+              display:'flex',
+              justifyContent: 'center'
+            }}
+            >Actions</TableCell>
 
           </TableRow>
         </TableHead>
@@ -72,9 +82,22 @@ export default function AddressBookSub() {
                 {row.lastName}
               </TableCell>
               <TableCell >{row.firstName}</TableCell>
-              <TableCell align="right">{row.fat}</TableCell>
-              <TableCell align="right"></TableCell>
-       
+              <TableCell >{row.fat}</TableCell>
+              <TableCell 
+              style={{
+                display: 'flex',
+                justifyContent: 'space-evenly',
+                
+              }}
+              > 
+              <span style={{
+                cursor: 'pointer'
+              }}>
+              <SimpleModal />
+              </span>
+               <DeleteOutlined />
+              </TableCell>
+
             </TableRow>
           ))}
         </TableBody>

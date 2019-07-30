@@ -38,7 +38,6 @@ export default function Form(props) {
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
-     
         <Typography component="h1" variant="h5">
             Sign Up
         </Typography>
