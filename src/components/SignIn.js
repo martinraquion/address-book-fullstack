@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import {Link} from 'react-router-dom';
+// import { EventEmitter } from 'events';
 
 const useStyles = makeStyles(theme => ({
   '@global': {
@@ -32,24 +33,55 @@ const useStyles = makeStyles(theme => ({
 export default function SignIn() {
   const classes = useStyles();
 
-  return (
+  const [inputValues, setInputValues] = useState({
+    username: '', password: ''
+  });
 
+  const [validation, setValidation] = useState({
+    validateUn: false, validatePs: false
+  })
+
+  const handleOnChange = event => {
+    const { name, value, id } = event.target;
+    setInputValues({ ...inputValues, [name]: value });
+    (value==='')?
+      setValidation({...validation,[id]: true}) 
+      : setValidation({...validation,[id]:false })
+  };
+
+  const handleBlur = event =>{
+    const {value, id} = event.target
+    if(value===''){
+      setValidation({...validation,
+          [id]: true
+      })
+  }
+  }
+
+  return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
-     
+        <Link to='/addressbook'>
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate>
+        </Link>
+        <form className={classes.form}>
           <TextField
             variant="outlined"
             margin="normal"
             required
             fullWidth
-            id="username"
+            error={validation.validateUn}
+            id="validateUn"
             label="Username"
             name="username"
+            helperText={validation.validateUn? 'Username is required': ''}
+            value={inputValues.username}
+            onChange={handleOnChange}
+            // onInput={handleInput}
+            onBlur={handleBlur}
             autoFocus
           />
           <TextField
@@ -60,10 +92,15 @@ export default function SignIn() {
             name="password"
             label="Password"
             type="password"
-            id="password"
+            id="validatePs"
+            helperText={validation.validatePs? 'Password is required': ''}
+            error={validation.validatePs}
+            value={inputValues.password}
+            onChange={handleOnChange}
+            onBlur={handleBlur}
             autoComplete="current-password"
           />
-          <Link to='/addressbook'>
+          {/* <Link to='/addressbook'> */}
           <Button
             type="submit"
             fullWidth
@@ -73,7 +110,7 @@ export default function SignIn() {
           >
             Sign In
           </Button>
-          </Link>            
+          {/* </Link>             */}
             <div style={{
                 display: 'flex',
                 justifyContent: 'flex-end'

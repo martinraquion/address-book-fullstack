@@ -62,12 +62,12 @@ export default function AddressBookSub() {
             <TableCell align="left">First Name</TableCell>
             <TableCell align="right">Phone Number</TableCell>
             <TableCell align="right">Actions</TableCell>
-    
+
           </TableRow>
         </TableHead>
         <TableBody>
           {rows.map(row => (
-            <TableRow key={row.name}>
+            <TableRow key={row.fat}>
               <TableCell component="th" scope="row">
                 {row.lastName}
               </TableCell>

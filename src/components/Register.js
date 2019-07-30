@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function Register() {
+export default function Form(props) {
   const classes = useStyles();
 
   return (
@@ -48,10 +48,14 @@ export default function Register() {
             margin="normal"
             required
             fullWidth
-            id="firstName"
+            id="validateFn"
             label="First Name"
             name="firstName"
             autoFocus
+            error={props.validateFn}
+            onBlur={props.handleBlur}
+            // value={props.username}
+            onChange={props.handleChange}
           />
           
         <TextField
@@ -59,28 +63,37 @@ export default function Register() {
             margin="normal"
             required
             fullWidth
-            id="lastName"
+            id="validateLn"
             label="Last Name"
             name="lastName"
+            onChange={props.handleChange}
+            error={props.validateLn}
+            onBlur={props.handleBlur}
           />
             <TextField
             variant="outlined"
             margin="normal"
             required
             fullWidth
-            id="username"
+            id="validateUn"
             label="Username"
             name="username"
+            onChange={props.handleChange}
+            error={props.validateUn}
+            onBlur={props.handleBlur}
           />
           <TextField
             variant="outlined"
             margin="normal"
             required
             fullWidth
-            id="email"
+            id="validateEm"
             label="Email Address"
             name="email"
             autoComplete="email"
+            onChange={props.handleChange}
+            error={props.validateEm}
+            onBlur={props.handleBlur}
           />
         
           <TextField
@@ -91,8 +104,11 @@ export default function Register() {
             name="password"
             label="Password"
             type="password"
-            id="password"
+            id="validatePs"
             autoComplete="current-password"
+            onChange={props.handleChange}
+            error={props.validatePs}
+            onBlur={props.handleBlur}
           />
    
           <Button
