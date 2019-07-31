@@ -15,7 +15,8 @@ massive({
   app.set('db', db);
 
   app.use(express.json());
-  app.post('/register', users.create);
+  app.post('/login', users.login);
+  app.post('/register', users.register);
 
   const PORT = 3001;
   app.listen(PORT, () => {
