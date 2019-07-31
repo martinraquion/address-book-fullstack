@@ -62,11 +62,11 @@ export default function SignIn() {
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
-        <Link to='/addressbook'>
+        {/* <Link to='/addressbook'> */}
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        </Link>
+        {/* </Link> */}
         <form className={classes.form}>
           <TextField
             variant="outlined"
@@ -80,9 +80,7 @@ export default function SignIn() {
             helperText={validation.validateUn? 'Username is required': ''}
             value={inputValues.username}
             onChange={handleOnChange}
-            // onInput={handleInput}
             onBlur={handleBlur}
-            autoFocus
           />
           <TextField
             variant="outlined"
@@ -115,9 +113,9 @@ export default function SignIn() {
                 display: 'flex',
                 justifyContent: 'flex-end'
             }}>
-                <Link to='/register'>
-                {"Don't have an account? Sign Up"}
-              </Link>
+            <Link to='/register'>
+            {"Don't have an account? Sign Up"}
+            </Link>
             </div>
         </form>
       </div>
