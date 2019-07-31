@@ -1,7 +1,7 @@
 import React from 'react';
 // import MaterialTable from 'material-table';
 import ButtonAppBar from './Header';
-import { Container, Typography } from '@material-ui/core';
+import { Container } from '@material-ui/core';
 // import { makeStyles } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -14,7 +14,11 @@ import TextField from '@material-ui/core/TextField';
 // import Create from '@material-ui/icons/CreateOutlined'
 import DeleteOutlined from '@material-ui/icons/DeleteSweepOutlined'
 // import { flexbox } from '@material-ui/system';
-import SimpleModal from './ContactModal'
+import AddModal from './AddModal';
+import EditModal from './EditModal';
+// import AddBox from '@material-ui/icons/AddBox';
+import Tooltip from '@material-ui/core/Tooltip';
+// import { inherits } from 'util';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -29,14 +33,17 @@ const useStyles = makeStyles(theme => ({
   table: {
     minWidth: 650,
   },
+  
 }));
 
-function createData(lastName, firstName, fat, carbs, protein) {
-    return { lastName, firstName, fat, carbs, protein };
+function createData(lastName, firstName, phone_number) {
+    return { lastName, firstName, phone_number};
   }
   
   const rows = [
-    createData('Raquion', 'Martin Earl', '09123446881', 24, 4.0),
+    createData('Raquion', 'Martin Earl', '09123446881'),
+    createData('Longaza', 'Trizha Kate', '09123446881'),
+    createData('Barbin', 'John Paulo', '09123446881'),
    
   ];
 
@@ -53,25 +60,47 @@ export default function AddressBookSub() {
       marginTop: '40px'
     }}
     >
+    <span
+    style={{
+      display: 'flex',
+      justifyContent:'space-between',
+      alignItems:'center'
+    }}
+    >
+    <Tooltip title="Add New Contact" placement="right">
+     <AddModal/>
+    </Tooltip>
+    <TextField
+        id="standard-search"
+        label="Search"
+        type="search"
+        // className={classes.textField}
 
-<Typography className={classes.searchbar}>
-          <TextField placeholder='Search' />
-      </Typography>
-<Paper className={classes.root}>
-     
+        // margin="normal"
+    />
+   
+    </span>
     
+<Paper className={classes.root}>    
       <Table className={classes.table}>
-        <TableHead>
+        <TableHead
+        >
           <TableRow>
             <TableCell >Last Name</TableCell>
             <TableCell align="left">First Name</TableCell>
-            <TableCell>Phone Number</TableCell>
+            <TableCell>Mobile Number</TableCell>
             <TableCell 
+            >
+            <span
             style={{
               display:'flex',
               justifyContent: 'center'
             }}
-            >Actions</TableCell>
+            >
+            Actions
+            </span>
+            
+            </TableCell>
 
           </TableRow>
         </TableHead>
@@ -84,18 +113,28 @@ export default function AddressBookSub() {
               <TableCell >{row.firstName}</TableCell>
               <TableCell >{row.fat}</TableCell>
               <TableCell 
-              style={{
-                display: 'flex',
-                justifyContent: 'space-evenly',
-                
-              }}
               > 
               <span style={{
+                 // style={{
+                display: 'flex',
+                justifyContent: 'space-evenly',
+               
+              }}>
+              <span
+              style={{
+                cursor: 'pointer'
+              }}
+              >
+              <EditModal
+               />
+              </span>
+              <span
+              style={{
                 cursor: 'pointer'
               }}>
-              <SimpleModal />
-              </span>
                <DeleteOutlined />
+               </span>
+               </span>
               </TableCell>
 
             </TableRow>
