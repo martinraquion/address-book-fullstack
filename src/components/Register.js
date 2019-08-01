@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import {Link} from 'react-router-dom';
+import axios from 'axios'
 // import Paper from '@material-ui/core/Paper'
 
 const useStyles = makeStyles(theme => ({
@@ -56,7 +57,7 @@ export default function Form() {
     (value==='')?
       setValidation({...validation,[id]: true}) 
       : setValidation({...validation,[id]:false })
-      console.log(inputValues)
+      // console.log(inputValues)
   };
 
   const handleBlur = event =>{
@@ -66,6 +67,18 @@ export default function Form() {
           [id]: true
       })
   }}
+
+  const handleSubmit = () =>{
+    // console.log(inputValues)
+    axios('http://localhost:3001/api/register', 
+    {
+      method: 'post',
+      data:inputValues
+    })
+    .then(res =>{
+      window.location.href = '#/'
+    }
+    )}
 
 
   return (
@@ -145,11 +158,12 @@ export default function Form() {
           />
    
           <Button
-            type="submit"
+            // type="submit"
             fullWidth
             variant="contained"
             color="secondary"
             className={classes.submit}
+            onClick={handleSubmit}
           >
             Register
           </Button>

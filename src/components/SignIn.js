@@ -68,7 +68,7 @@ export default function SignIn() {
     })
     .then(res =>{
       localStorage.setItem('token', res.data.token);
-      window.location.href = '#/addressbook'
+      window.location.href = '#/addressbook'  
     }
     )}
 
