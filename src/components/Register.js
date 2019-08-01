@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -31,8 +31,42 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function Form(props) {
+export default function Form() {
   const classes = useStyles();
+
+  const [inputValues, setInputValues] = useState({
+    firstName:'',
+    lastName: '',
+    username:'',
+    password:'',
+    email:''
+  });
+
+  const [validation, setValidation] = useState({
+    validateFn: false,
+    validateLn: false,
+    validateUn: false,
+    validatePs: false,
+    validateEm: false
+  })
+
+  const handleChange = event => {
+    const { name, value, id } = event.target;
+    setInputValues({ ...inputValues, [name]: value });
+    (value==='')?
+      setValidation({...validation,[id]: true}) 
+      : setValidation({...validation,[id]:false })
+      console.log(inputValues)
+  };
+
+  const handleBlur = event =>{
+    const {value, id} = event.target
+    if(value===''){
+      setValidation({...validation,
+          [id]: true
+      })
+  }}
+
 
   return (
     <Container component="main" maxWidth="xs">
@@ -51,10 +85,10 @@ export default function Form(props) {
             label="First Name"
             name="firstName"
             autoFocus
-            error={props.validateFn}
-            onBlur={props.handleBlur}
-            // value={props.username}
-            onChange={props.handleChange}
+            error={validation.validateFn}
+            onBlur={handleBlur}
+            // value={inputValues.username}
+            onChange={handleChange}
           />
           
         <TextField
@@ -65,9 +99,9 @@ export default function Form(props) {
             id="validateLn"
             label="Last Name"
             name="lastName"
-            onChange={props.handleChange}
-            error={props.validateLn}
-            onBlur={props.handleBlur}
+            onChange={handleChange}
+            error={validation.validateLn}
+            onBlur={handleBlur}
           />
             <TextField
             variant="outlined"
@@ -77,9 +111,9 @@ export default function Form(props) {
             id="validateUn"
             label="Username"
             name="username"
-            onChange={props.handleChange}
-            error={props.validateUn}
-            onBlur={props.handleBlur}
+            onChange={handleChange}
+            error={validation.validateUn}
+            onBlur={handleBlur}
           />
           <TextField
             variant="outlined"
@@ -90,9 +124,9 @@ export default function Form(props) {
             label="Email Address"
             name="email"
             autoComplete="email"
-            onChange={props.handleChange}
-            error={props.validateEm}
-            onBlur={props.handleBlur}
+            onChange={handleChange}
+            error={validation.validateEm}
+            onBlur={handleBlur}
           />
         
           <TextField
@@ -105,9 +139,9 @@ export default function Form(props) {
             type="password"
             id="validatePs"
             autoComplete="current-password"
-            onChange={props.handleChange}
-            error={props.validatePs}
-            onBlur={props.handleBlur}
+            onChange={handleChange}
+            error={validation.validatePs}
+            onBlur={handleBlur}
           />
    
           <Button

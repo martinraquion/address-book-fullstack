@@ -66,10 +66,11 @@ export default function SignIn() {
       method: 'post',
       data:inputValues
     })
-    .then(res =>
-      localStorage.setItem('token', res.data.token)
-      )
-  }
+    .then(res =>{
+      localStorage.setItem('token', res.data.token);
+      window.location.href = '#/addressbook'
+    }
+    )}
 
   return (
     <Container component="main" maxWidth="xs">

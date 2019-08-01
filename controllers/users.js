@@ -10,8 +10,8 @@ function register(req, res) {
     .then(hash => {
       return db.users.insert(
         {
-            firstName,
-            lastName,
+          firstName,
+          lastName,
           username,
           email,
           password: hash,
