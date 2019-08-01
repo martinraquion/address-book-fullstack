@@ -2,6 +2,9 @@ const express = require('express');
 const massive = require('massive');
 
 const users = require('../controllers/users')
+const cors = require("cors");
+
+
 
 massive({
   host: 'localhost',
@@ -15,8 +18,9 @@ massive({
   app.set('db', db);
 
   app.use(express.json());
-  app.post('/login', users.login);
-  app.post('/register', users.register);
+  app.use(cors());
+  app.post('/api/login', users.login);
+  app.post('/api/register', users.register);
 
   const PORT = 3001;
   app.listen(PORT, () => {

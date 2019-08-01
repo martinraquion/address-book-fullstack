@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import {Link} from 'react-router-dom';
+import axios from 'axios';
 // import { EventEmitter } from 'events';
 
 const useStyles = makeStyles(theme => ({
@@ -58,6 +59,19 @@ export default function SignIn() {
   }
   }
 
+  const handleSubmit = () =>{
+    // console.log(inputValues)
+    axios('http://localhost:3001/api/login', 
+    {
+      method: 'post',
+      data:inputValues
+    })
+    .then(res =>
+      window.location.href='#/addressbook'
+      )
+    
+  }
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -100,11 +114,12 @@ export default function SignIn() {
           />
           {/* <Link to='/addressbook'> */}
           <Button
-            type="submit"
+            // type="submit"
             fullWidth
             variant="contained"
             color="primary"
             className={classes.submit}
+            onClick={handleSubmit}
           >
             Sign In
           </Button>
