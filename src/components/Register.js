@@ -69,16 +69,20 @@ export default function Form() {
   }}
 
   const handleSubmit = () =>{
-    // console.log(inputValues)
     axios('http://localhost:3001/api/register', 
     {
       method: 'post',
       data:inputValues
     })
     .then(res =>{
-      window.location.href = '#/'
+      console.log(res)
     }
-    )}
+    
+    )
+    .catch(res => {
+      console.log(res)
+    })}
+
 
 
   return (
@@ -158,12 +162,15 @@ export default function Form() {
           />
    
           <Button
-            // type="submit"
+            type="submit"
             fullWidth
             variant="contained"
             color="secondary"
             className={classes.submit}
-            onClick={handleSubmit}
+            onClick={
+              handleSubmit
+            }
+            // disabled={buttonState}
           >
             Register
           </Button>

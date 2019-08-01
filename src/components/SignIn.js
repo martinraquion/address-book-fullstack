@@ -7,7 +7,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
+import 'react-toastify/dist/ReactToastify.min.css'; 
+import { ToastContainer } from 'react-toastify';
 // import { EventEmitter } from 'events';
+import { toast } from 'react-toastify';
+
 
 const useStyles = makeStyles(theme => ({
   '@global': {
@@ -31,6 +35,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+
 export default function SignIn() {
   const classes = useStyles();
 
@@ -41,6 +46,10 @@ export default function SignIn() {
   const [validation, setValidation] = useState({
     validateUn: false, validatePs: false
   })
+
+  const [token, setToken] = useState('')
+
+  // const [toaster, setToaster] = useState(true)
 
   const handleOnChange = event => {
     const { name, value, id } = event.target;
@@ -60,7 +69,7 @@ export default function SignIn() {
   }
 
   const handleSubmit = () =>{
-    // console.log(inputValues)
+    
     axios('http://localhost:3001/api/login', 
     {
       method: 'post',
@@ -68,9 +77,21 @@ export default function SignIn() {
     })
     .then(res =>{
       localStorage.setItem('token', res.data.token);
+      setToken({token: res.data.token});
       window.location.href = '#/addressbook'  
     }
-    )}
+    
+    )
+    .catch(function(response) {
+      // setNewToken(response.data.newToken);
+    toast.error('Incorrect Username or Password')
+      // setToaster(false)
+      console.log(response)
+    })
+    
+  }
+ 
+    
 
   return (
     <Container component="main" maxWidth="xs">
@@ -81,6 +102,11 @@ export default function SignIn() {
           Sign in
         </Typography>
         {/* </Link> */}
+        <ToastContainer
+        autoClose={2500}
+        hideProgressBar
+        // position='top-center'
+         />
         <form className={classes.form}>
           <TextField
             variant="outlined"
