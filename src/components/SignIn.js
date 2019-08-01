@@ -67,9 +67,8 @@ export default function SignIn() {
       data:inputValues
     })
     .then(res =>
-      window.location.href='#/addressbook'
+      localStorage.setItem('token', res.data.token)
       )
-    
   }
 
   return (
