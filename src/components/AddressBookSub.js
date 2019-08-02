@@ -66,13 +66,7 @@ export default function AddressBookSub() {
       country: ""
     })
 
-    useEffect(() => {
-      axios.get('http://localhost:3001/api/contact')
-      .then(res => {
-        setContactList(res.data);
-        setLoaderState(false);
-      })
-    }, [])
+    
  
     // }
 
@@ -106,10 +100,17 @@ export default function AddressBookSub() {
               json: true,
               data: inputValues,
           })
-      // .then()
+      
+      setOpen(false)
   }
     
-
+  useEffect(() => {
+    axios.get('http://localhost:3001/api/contact')
+    .then(res => {
+      setContactList(res.data);
+      setLoaderState(false);
+    })
+  }, [contactList])
       
     
 
