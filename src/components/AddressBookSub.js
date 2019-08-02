@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 // import MaterialTable from 'material-table';
 import ButtonAppBar from './Header';
 import { Container } from '@material-ui/core';
@@ -16,8 +16,9 @@ import DeleteOutlined from '@material-ui/icons/DeleteSweepOutlined'
 // import { flexbox } from '@material-ui/system';
 import AddModal from './AddModal';
 import EditModal from './EditModal';
+import axios from 'axios';
 // import AddBox from '@material-ui/icons/AddBox';
-import Tooltip from '@material-ui/core/Tooltip';
+// import Tooltip from '@material-ui/core/Tooltip';
 // import { inherits } from 'util';
 
 const useStyles = makeStyles(theme => ({
@@ -50,6 +51,32 @@ function createData(lastName, firstName, phone_number) {
 
 export default function AddressBookSub() {
     const classes = useStyles();
+    const [contactMount, setContactMount] = useState(true)
+    const [contactList, setContactList] = useState([])
+
+
+    if(contactMount){
+    axios.get('http://localhost:3001/api/contact')
+    .then(res => {
+      // console.log(res)
+      // contactList.push(res.data[0])
+      setContactMount(false)
+      setContactList(res.data)
+
+      // console.log(contactList[0])
+    })
+    }
+
+    const handleEdit = (e) => {
+      e.preventDefault()
+      console.log(e.target.id)
+    }
+
+    
+
+    // console.log(contactList)
+
+    // console.log(contactList)
 
   return (
     <React.Fragment>
@@ -67,9 +94,9 @@ export default function AddressBookSub() {
       alignItems:'center'
     }}
     >
-    <Tooltip title="Add New Contact" placement="right">
+    {/* <Tooltip title="Add New Contact" placement="right"> */}
      <AddModal/>
-    </Tooltip>
+    {/* </Tooltip> */}
     <TextField
         id="standard-search"
         label="Search"
@@ -105,13 +132,15 @@ export default function AddressBookSub() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map(row => (
-            <TableRow key={row.fat}>
+          {contactList.map(res => (
+            
+            <TableRow key={res.id}>
+            {console.log(res.id)}
               <TableCell component="th" scope="row">
-                {row.lastName}
+                {res.first_name}
               </TableCell>
-              <TableCell >{row.firstName}</TableCell>
-              <TableCell >{row.fat}</TableCell>
+              <TableCell >{res.last_name}</TableCell>
+              <TableCell >{res.home_phone}</TableCell>
               <TableCell 
               > 
               <span style={{
@@ -126,13 +155,18 @@ export default function AddressBookSub() {
               }}
               >
               <EditModal
+              // onClick={handleEdit}
+              // value={res.id}
                />
               </span>
               <span
               style={{
                 cursor: 'pointer'
               }}>
-               <DeleteOutlined />
+               <DeleteOutlined
+               id={res.id}
+               onClick={handleEdit}
+                />
                </span>
                </span>
               </TableCell>

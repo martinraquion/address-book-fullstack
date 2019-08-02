@@ -81,7 +81,8 @@ export default function Form() {
     )
     .catch(res => {
       console.log(res)
-    })}
+    })
+  }
 
 
 
@@ -162,7 +163,7 @@ export default function Form() {
           />
    
           <Button
-            type="submit"
+            // type="submit"  
             fullWidth
             variant="contained"
             color="secondary"

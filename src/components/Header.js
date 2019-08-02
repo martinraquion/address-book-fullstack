@@ -21,6 +21,10 @@ const useStyles = makeStyles(theme => ({
 export default function ButtonAppBar() {
   const classes = useStyles();
 
+  const handleClick = () =>{
+    localStorage.clear()
+  }
+
   return (
     <div className={classes.root}>
       <AppBar position="static">
@@ -34,7 +38,11 @@ export default function ButtonAppBar() {
             color: 'white'
           }}
           >
-          <Button color="inherit">Logout</Button>
+          <Button color="inherit"
+          onClick={handleClick}
+          >
+          Logout
+          </Button>
           </Link>
         </Toolbar>
       </AppBar>

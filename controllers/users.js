@@ -68,6 +68,44 @@ function login(req, res) {
         }
       });
   }
+  
+  function addContact(req, res){
+    const db = req.app.get('db');
+    const { first_name, last_name, home_phone,	mobile_phone,	work_phone,	email,	city,	state_or_province, postal_code,	country } = req.body;
+    db.contact
+    .insert(
+      {
+        first_name, 
+        last_name, 
+        home_phone,	
+        mobile_phone,
+        work_phone,	
+        email,	
+        city,	
+        state_or_province, 
+        postal_code,	
+        country
+      },
+     
+    )
+    .then(contact => res.status(201).json(contact))
+    .catch(err => {
+      console.error(err);
+    });
+  }
+
+  function listContact(req, res) {
+    const db = req.app.get('db');
+  
+    db.contact
+      .find()
+      .then(contact => res.status(200).json(contact))
+      .catch(err => {
+        console.error(err);
+        res.status(500).end();
+      });
+  }
+  
 
   function protected(req, res) {
     if (!req.headers.authorization) {
@@ -87,7 +125,9 @@ function login(req, res) {
   module.exports = {
     register,
     login,
-    protected
+    protected,
+    addContact,
+    listContact
   };
   
   // server/index.js - register the handler
