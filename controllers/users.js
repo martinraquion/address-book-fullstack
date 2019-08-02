@@ -105,6 +105,40 @@ function login(req, res) {
         res.status(500).end();
       });
   }
+
+  function contactById(req, res) {
+    const db = req.app.get('db');
+  
+    db.contact
+      .findOne(req.params.id)
+      .then(contact => res.status(200).json(contact))
+      .catch(err => {
+        console.error(err);
+        res.status(500).end();
+      });
+  }
+
+  // function deleteContact(req, res){
+  //   const db = req.app.get('db');
+  
+  //   db.contact
+  //   .findOne(req.params.id)
+  //   .then(res => {
+
+  //   })
+
+  //   let contactId = ;
+  //     let contact = contacts.filter(contact => {
+  //     return contact.id == contactId;
+  //   })[0];
+  
+  //   const index = contacts.indexOf(contact);
+  
+  //   contacts.splice(index, 1);
+  
+  //   res.json({ message: `User ${contactId} deleted.`});
+  
+  // }
   
 
   function protected(req, res) {
@@ -127,7 +161,9 @@ function login(req, res) {
     login,
     protected,
     addContact,
-    listContact
+    listContact,
+    contactById,
+    // deleteContact
   };
   
   // server/index.js - register the handler

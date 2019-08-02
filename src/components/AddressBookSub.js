@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 // import MaterialTable from 'material-table';
 import ButtonAppBar from './Header';
 import { Container } from '@material-ui/core';
@@ -14,12 +14,20 @@ import TextField from '@material-ui/core/TextField';
 // import Create from '@material-ui/icons/CreateOutlined'
 import DeleteOutlined from '@material-ui/icons/DeleteSweepOutlined'
 // import { flexbox } from '@material-ui/system';
-import AddModal from './AddModal';
+// import AddModal from './AddModal';
 import EditModal from './EditModal';
 import axios from 'axios';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+// import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button'
+import AddBox from '@material-ui/icons/AddBox';
 // import AddBox from '@material-ui/icons/AddBox';
 // import Tooltip from '@material-ui/core/Tooltip';
-// import { inherits } from 'util';
+// import { inherits } from 'util'; 
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -37,46 +45,49 @@ const useStyles = makeStyles(theme => ({
   
 }));
 
-function createData(lastName, firstName, phone_number) {
-    return { lastName, firstName, phone_number};
-  }
-  
-  const rows = [
-    createData('Raquion', 'Martin Earl', '09123446881'),
-    createData('Longaza', 'Trizha Kate', '09123446881'),
-    createData('Barbin', 'John Paulo', '09123446881'),
-   
-  ];
-
 
 export default function AddressBookSub() {
     const classes = useStyles();
-    const [contactMount, setContactMount] = useState(true)
+    // const [contactMount, setContactMount] = useState(true)
     const [contactList, setContactList] = useState([])
-
-
-    if(contactMount){
-    axios.get('http://localhost:3001/api/contact')
-    .then(res => {
-      // console.log(res)
-      // contactList.push(res.data[0])
-      setContactMount(false)
-      setContactList(res.data)
-
-      // console.log(contactList[0])
+    const [loaderState, setLoaderState] = useState(true)
+    const [open, setOpen] = useState(false);
+    const [inputValues, setInputValues] = useState({
+      first_name: "",
+      last_name: "",
+      home_phone: "",
+      mobile_phone: "",
+      work_phone: "",
+      email: "",
+      city:"",
+      state_or_province: "",
+      postal_code: "",
+      country: ""
     })
-    }
+
+    useEffect(() => {
+      axios.get('http://localhost:3001/api/contact')
+      .then(res => {
+        setContactList(res.data);
+        setLoaderState(false);
+      })
+    }, [])
+ 
+    // }
 
     const handleEdit = (e) => {
-      e.preventDefault()
-      console.log(e.target.id)
+      // e.preventDefault()
+      // console.log(e.target.id)
     }
 
+    function handleClickOpen() {
+      setOpen(true);
+    }
     
+    function handleClose() {
+      setOpen(false);
+    }
 
-    // console.log(contactList)
-
-    // console.log(contactList)
 
   return (
     <React.Fragment>
@@ -95,7 +106,7 @@ export default function AddressBookSub() {
     }}
     >
     {/* <Tooltip title="Add New Contact" placement="right"> */}
-     <AddModal/>
+    <AddBox onClick={handleClickOpen}/>
     {/* </Tooltip> */}
     <TextField
         id="standard-search"
@@ -131,15 +142,16 @@ export default function AddressBookSub() {
 
           </TableRow>
         </TableHead>
+        
         <TableBody>
+        
           {contactList.map(res => (
             
             <TableRow key={res.id}>
-            {console.log(res.id)}
               <TableCell component="th" scope="row">
-                {res.first_name}
+                {res.last_name}
               </TableCell>
-              <TableCell >{res.last_name}</TableCell>
+              <TableCell >{res.first_name}</TableCell>
               <TableCell >{res.home_phone}</TableCell>
               <TableCell 
               > 
@@ -175,7 +187,119 @@ export default function AddressBookSub() {
           ))}
         </TableBody>
       </Table>
+      {loaderState? <h1>Loading</h1>:''}
     </Paper>
+
+    <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" className={classes.dialog}>
+                  <DialogTitle id="form-dialog-title" className={classes.dialogTitle}>
+                    ADD NEW CONTACT
+                  </DialogTitle>
+                <DialogContent>
+                  {/* <DialogContentText>
+                    
+                  </DialogContentText> */}
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        required
+                        id="first_name"
+                        name="first_name"
+                        label="First name"
+                        fullWidth
+                        onChange={handleChange}
+                        // autoComplete="fname"
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        required
+                        id="last_name"
+                        name="last_name"
+                        label="Last name"
+                        fullWidth
+                        // autoComplete="lname"
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        required
+                        id="email"
+                        name="email"
+                        label="Email Address"
+                        fullWidth
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                      <TextField
+                        required
+                        id="mobile_phone"
+                        name="mobile_phone"
+                        label="Mobile Phone"
+                        fullWidth
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                      <TextField
+                        required
+                        id="home_phone"
+                        name="home_phone"
+                        label="Home Phone"
+                        fullWidth
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                      <TextField
+                        required
+                        id="work_phone"
+                        name="work_phone"
+                        label="Work Phone"
+                        fullWidth
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        required
+                        id="city"
+                        name="city"
+                        label="City"
+                        fullWidth
+                        autoComplete="billing address-level2"
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField id="state_or_province" name="state_or_province" label="State/Province/Region" fullWidth />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        required
+                        id="postal_code"
+                        name="postal_code"
+                        label="Zip / Postal code"
+                        fullWidth
+                        autoComplete="billing postal-code"
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        required
+                        id="country"
+                        name="country"
+                        label="Country"
+                        fullWidth
+                        autoComplete="billing country"
+                      />
+                    </Grid>
+                  </Grid>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleClose} color="primary">
+                    CANCEL
+                  </Button>
+                  <Button onClick={handleClose} color="primary">
+                    ADD
+                  </Button>
+                </DialogActions>
+              </Dialog>
     
     </Container>
     </React.Fragment>
