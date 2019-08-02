@@ -25,6 +25,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button'
 import AddBox from '@material-ui/icons/AddBox';
+// import axios from 'axios'
 // import AddBox from '@material-ui/icons/AddBox';
 // import Tooltip from '@material-ui/core/Tooltip';
 // import { inherits } from 'util'; 
@@ -80,13 +81,40 @@ export default function AddressBookSub() {
       // console.log(e.target.id)
     }
 
-    function handleClickOpen() {
+    const handleClickOpen = () => {
       setOpen(true);
     }
     
-    function handleClose() {
+    const handleClose = () => {
       setOpen(false);
     }
+
+    const handleChange = e => {
+      const {name, value} = e.target
+      setInputValues({...inputValues, 
+      [name]: value
+      // console.log(na)
+      })
+      console.log(inputValues)
+      
+    }
+
+    const handleAddContact = () => {
+      axios({
+              url: 'http://localhost:3001/api/contact',
+              method: 'post',
+              json: true,
+              data: inputValues,
+          })
+      // .then()
+  }
+    
+
+      
+    
+
+   
+    
 
 
   return (
@@ -216,6 +244,7 @@ export default function AddressBookSub() {
                         id="last_name"
                         name="last_name"
                         label="Last name"
+                        onChange={handleChange}
                         fullWidth
                         // autoComplete="lname"
                       />
@@ -226,6 +255,7 @@ export default function AddressBookSub() {
                         id="email"
                         name="email"
                         label="Email Address"
+                        onChange={handleChange}
                         fullWidth
                       />
                     </Grid>
@@ -235,6 +265,7 @@ export default function AddressBookSub() {
                         id="mobile_phone"
                         name="mobile_phone"
                         label="Mobile Phone"
+                        onChange={handleChange}
                         fullWidth
                       />
                     </Grid>
@@ -244,6 +275,7 @@ export default function AddressBookSub() {
                         id="home_phone"
                         name="home_phone"
                         label="Home Phone"
+                        onChange={handleChange}
                         fullWidth
                       />
                     </Grid>
@@ -253,6 +285,7 @@ export default function AddressBookSub() {
                         id="work_phone"
                         name="work_phone"
                         label="Work Phone"
+                        onChange={handleChange}
                         fullWidth
                       />
                     </Grid>
@@ -262,6 +295,7 @@ export default function AddressBookSub() {
                         id="city"
                         name="city"
                         label="City"
+                        onChange={handleChange}
                         fullWidth
                         autoComplete="billing address-level2"
                       />
@@ -275,6 +309,7 @@ export default function AddressBookSub() {
                         id="postal_code"
                         name="postal_code"
                         label="Zip / Postal code"
+                        onChange={handleChange}
                         fullWidth
                         autoComplete="billing postal-code"
                       />
@@ -285,6 +320,7 @@ export default function AddressBookSub() {
                         id="country"
                         name="country"
                         label="Country"
+                        onChange={handleChange}
                         fullWidth
                         autoComplete="billing country"
                       />
@@ -292,10 +328,13 @@ export default function AddressBookSub() {
                   </Grid>
                 </DialogContent>
                 <DialogActions>
-                  <Button onClick={handleClose} color="primary">
+                  <Button color="primary">
                     CANCEL
                   </Button>
-                  <Button onClick={handleClose} color="primary">
+                  <Button
+                  onClick={handleAddContact} 
+                  color="primary" 
+                  >
                     ADD
                   </Button>
                 </DialogActions>
