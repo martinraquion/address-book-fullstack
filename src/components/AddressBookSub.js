@@ -15,7 +15,7 @@ import TextField from '@material-ui/core/TextField';
 import DeleteOutlined from '@material-ui/icons/DeleteSweepOutlined'
 // import { flexbox } from '@material-ui/system';
 // import AddModal from './AddModal';
-import EditModal from './EditModal';
+// import EditModal from './EditModal';
 import axios from 'axios';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -26,6 +26,7 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button'
 import AddBox from '@material-ui/icons/AddBox';
 import jwtDecode from 'jwt-decode';
+import Create from '@material-ui/icons/CreateOutlined'
 // import axios from 'axios'
 // import AddBox from '@material-ui/icons/AddBox';
 // import Tooltip from '@material-ui/core/Tooltip';
@@ -55,6 +56,7 @@ export default function AddressBookSub() {
     const [contactList, setContactList] = useState([])
     const [loaderState, setLoaderState] = useState(true)
     const [open, setOpen] = useState(false);
+    const [editopen, setEditOpen] = useState(false);
     const [inputValues, setInputValues] = useState({
       first_name: "",
       last_name: "",
@@ -67,6 +69,21 @@ export default function AddressBookSub() {
       postal_code: "",
       country: ""
     })
+
+    const [editValues, setEditValues] = useState({
+      first_name: "",
+      last_name: "",
+      home_phone: "",
+      mobile_phone: "",
+      work_phone: "",
+      email: "",
+      city:"",
+      state_or_province: "",
+      postal_code: "",
+      country: ""
+    })
+
+    const [currentRow, setCurrentRow] = useState([])
 
     const token = localStorage.getItem('token');
     if(!token){
@@ -88,13 +105,32 @@ export default function AddressBookSub() {
       setOpen(false);
     }
 
+    // const handleEditOpen = () => {
+    //   setEditOpen(true);
+    // }
+    
+    const handleEditClose = () => {
+      setEditOpen(false);
+    }
+
     const handleChange = e => {
       const {name, value} = e.target
       setInputValues({...inputValues, 
       [name]: value
       // console.log(na)
       })
-      console.log(inputValues)
+      // console.log(inputValues)
+      
+    }
+
+    const handleEditChange = e => {
+      const {name, value} = e.target
+      setEditValues({...editValues, 
+      [name]: value
+      // console.log(na)
+      })
+      // console.log(inputValues)
+      // console.log(editValues)
       
     }
 
@@ -218,8 +254,11 @@ export default function AddressBookSub() {
                 cursor: 'pointer'
               }}
               >
-              <EditModal
-              // onClick={handleEdit}
+              <Create
+              onClick={()=>{
+                setEditOpen(true);
+                setCurrentRow(res)
+                }}
               // value={res.id}
                />
               </span>
@@ -368,6 +407,153 @@ export default function AddressBookSub() {
                   color="primary"
                   >
                     ADD
+                  </Button>
+                </DialogActions>
+              </Dialog>
+
+
+              <Dialog open={editopen} onClose={handleEditClose} aria-labelledby="form-dialog-title" className={classes.dialog}>
+                  <DialogTitle id="form-dialog-title" className={classes.dialogTitle}>
+                    EDIT CONTACT
+                  </DialogTitle>
+                <DialogContent>
+                  {/* <DialogContentText>
+                    
+                  </DialogContentText> */}
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        required
+                        id="first_name"
+                        name="first_name"
+                        label="First name"
+                        fullWidth
+                        onChange={handleEditChange}
+                        defaultValue={currentRow.first_name}
+                        // autoComplete="fname"
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        required
+                        id="last_name"
+                        name="last_name"
+                        label="Last name"
+                        onChange={handleEditChange}
+                        fullWidth
+                        defaultValue={currentRow.last_name}
+                        // autoComplete="lname"
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        required
+                        id="email"
+                        name="email"
+                        label="Email Address"
+                        onChange={handleEditChange}
+                        defaultValue={currentRow.email}
+                        fullWidth
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                      <TextField
+                        required
+                        id="mobile_phone"
+                        name="mobile_phone"
+                        label="Mobile Phone"
+                        onChange={handleEditChange}
+                        defaultValue={currentRow.mobile_phone}
+                        fullWidth
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                      <TextField
+                        required
+                        id="home_phone"
+                        name="home_phone"
+                        label="Home Phone"
+                        onChange={handleEditChange}
+                        defaultValue={currentRow.home_phone}
+                        fullWidth
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                      <TextField
+                        required
+                        id="work_phone"
+                        name="work_phone"
+                        label="Work Phone"
+                        onChange={handleEditChange}
+                        defaultValue={currentRow.work_phone}
+                        fullWidth
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        required
+                        id="city"
+                        name="city"
+                        label="City"
+                        onChange={handleEditChange}
+                        defaultValue={currentRow.city}
+                        fullWidth
+                        autoComplete="billing address-level2"
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField 
+                      id="state_or_province" 
+                      name="state_or_province" 
+                      label="State/Province/Region"
+                      defaultValue={currentRow.state_or_province}
+                      fullWidth />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        required
+                        id="postal_code"
+                        name="postal_code"
+                        label="Zip / Postal code"
+                        onChange={handleEditChange}
+                        defaultValue={currentRow.postal_code}
+                        fullWidth
+                        autoComplete="billing postal-code"
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        required
+                        id="country"
+                        name="country"
+                        label="Country"
+                        onChange={handleEditChange}
+                        defaultValue={currentRow.country}
+                        fullWidth
+                        autoComplete="billing country"
+                      />
+                    </Grid>
+                  </Grid>
+                </DialogContent>
+                <DialogActions>
+                  <Button 
+                  onClick={handleEditClose}
+                  color="primary">
+                    CANCEL
+                  </Button>
+                  <Button
+                  onClick={() => {
+                    setEditOpen(false)
+                    axios({
+                  method: 'patch',
+                  url: ` http://localhost:3001/api/update?cid=${currentRow.id}`,
+                  json: true,
+                  data: editValues
+                  })
+                  }}
+                  color="primary"
+                  >
+                   Edit
                   </Button>
                 </DialogActions>
               </Dialog>

@@ -47,7 +47,7 @@ export default function SignIn() {
     validateUn: false, validatePs: false
   })
 
-  const [token, setToken] = useState('')
+  // const [token, setToken] = useState('')
 
   // const [toaster, setToaster] = useState(true)
 
@@ -77,7 +77,7 @@ export default function SignIn() {
     })
     .then(res =>{
       localStorage.setItem('token', res.data.token);
-      setToken({token: res.data.token});
+      // setToken({token: res.data.token});
       console.log(res)
       window.location.href = `#/addressbook`
     }

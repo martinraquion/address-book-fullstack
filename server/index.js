@@ -27,6 +27,7 @@ massive({
   app.get('/api/contact/lastname', users.sortContact);
   app.get('/api/contact/:id', users.contactById);
   app.delete('/api/contact/:id', users.deleteContact);
+  app.patch('/api/update', users.updateContact);
   const PORT = 3001;
   app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);

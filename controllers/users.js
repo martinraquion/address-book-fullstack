@@ -101,7 +101,7 @@ function login(req, res) {
             contact_id,
           }
         ).then(add=>{
-          console.log(add)
+          // console.log(add)
           temp.push(add)
           res.status(201).json(temp)
         })
@@ -115,7 +115,7 @@ function login(req, res) {
 
     const db = req.app.get('db');
     const userID = req.query.id;
-    console.log(req.query.id)
+    // console.log(req.query.id)
     db
     .query(
       `Select contact.* from users, contact, address_book WHERE users.id = address_book.user_id AND contact.id = address_book.contact_id AND users.id = ${userID} ORDER BY contact.first_name`,
@@ -131,7 +131,7 @@ function login(req, res) {
   function sortContact(req, res) {
     const db = req.app.get('db');
     const userID = req.query.id;
-    console.log(req.query.id)
+    // console.log(req.query.id)
     db
     .query(
       `Select contact.* from users, contact, address_book WHERE users.id = address_book.user_id AND contact.id = address_book.contact_id AND users.id = ${userID} ORDER BY contact.last_name`,
@@ -141,6 +141,48 @@ function login(req, res) {
     )
     .then(data=>{
       res.status(200).json(data)
+    })
+  }
+
+  function updateContact(req, res){
+    const db = req.app.get('db');
+
+    const {
+      first_name,
+      last_name,
+      home_phone,
+      mobile_phone,
+      work_phone,
+      email,
+      city,
+      state_or_province,
+      postal_code,
+      country
+    } = req.body;
+
+    db.contact
+    .update(
+      {
+        id: req.query.cid
+      },
+      {
+        first_name,
+        last_name,
+        home_phone,
+        mobile_phone,
+        work_phone,
+        email,
+        city,
+        state_or_province,
+        postal_code,
+        country
+      }
+    )
+    .then(data =>{
+      res.status(201).json(data)
+    })
+    .catch(err => {
+      console.error(err);
     })
   }
 
@@ -196,7 +238,8 @@ function login(req, res) {
     listContact,
     contactById,
     deleteContact,
-    sortContact
+    sortContact,
+    updateContact
     // sampleClick
   };
   
