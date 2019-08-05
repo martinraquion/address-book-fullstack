@@ -70,11 +70,6 @@ export default function AddressBookSub() {
  
     // }
 
-    const handleEdit = (e) => {
-      // e.preventDefault()
-      // console.log(e.target.id)
-    }
-
     const handleClickOpen = () => {
       setOpen(true);
     }
@@ -103,6 +98,17 @@ export default function AddressBookSub() {
       
       setOpen(false)
   }
+
+  // const handleDeleteContact = e => {
+  //   console.log('delete')
+  //   axios(`http://localhost:3001/api/deleteContact/${contacts[i].contact_id}`, {
+  //     method: 'delete',
+  //   }).then(function (res) {
+  //     setComponent(true)
+  //     // console.log(res)
+  //   })
+  // }
+  
     
   useEffect(() => {
     axios.get('http://localhost:3001/api/contact')
@@ -112,12 +118,6 @@ export default function AddressBookSub() {
     })
   }, [contactList])
       
-    
-
-   
-    
-
-
   return (
     <React.Fragment>
     <ButtonAppBar />
@@ -204,10 +204,18 @@ export default function AddressBookSub() {
               style={{
                 cursor: 'pointer'
               }}>
+              
                <DeleteOutlined
-               id={res.id}
-               onClick={handleEdit}
+                onClick={() => {
+                    axios(`http://localhost:3001/api/contact/${res.id}`, {
+                    method: 'delete',
+                    }).then(function (res) {
+                    // setComponent(true)
+                    console.log(res)
+                    })
+                }}
                 />
+                {/* <span>confirm</span> */}
                </span>
                </span>
               </TableCell>

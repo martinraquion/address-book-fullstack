@@ -118,27 +118,20 @@ function login(req, res) {
       });
   }
 
-  // function deleteContact(req, res){
-  //   const db = req.app.get('db');
-  
-  //   db.contact
-  //   .findOne(req.params.id)
-  //   .then(res => {
-
-  //   })
-
-  //   let contactId = ;
-  //     let contact = contacts.filter(contact => {
-  //     return contact.id == contactId;
-  //   })[0];
-  
-  //   const index = contacts.indexOf(contact);
-  
-  //   contacts.splice(index, 1);
-  
-  //   res.json({ message: `User ${contactId} deleted.`});
-  
-  // }
+  function deleteContact(req, res){
+    const db = req.app.get('db');
+    const contactId = req.params.id;
+    // db.query(`DELETE FROM addressbook WHERE contact_id=${contacts_id}`)
+    // .then(() => {
+    db.query(`DELETE FROM contact WHERE id=${contactId}`)
+    // })
+    .then(response => {
+      res.status(200).json(response);
+    }).catch(err => {
+      console.log(err)
+      res.status(500).end()
+    });
+  }
   
 
   function protected(req, res) {
@@ -163,7 +156,7 @@ function login(req, res) {
     addContact,
     listContact,
     contactById,
-    // deleteContact
+    deleteContact
   };
   
   // server/index.js - register the handler

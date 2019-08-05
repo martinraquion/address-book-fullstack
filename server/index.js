@@ -25,7 +25,7 @@ massive({
   app.post('/api/contact', users.addContact);
   app.get('/api/contact', users.listContact);
   app.get('/api/contact/:id', users.contactById);
-  // app.delete('/api/contact/:id', users.deleteContact);
+  app.delete('/api/contact/:id', users.deleteContact);
   const PORT = 3001;
   app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
