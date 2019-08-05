@@ -71,39 +71,77 @@ function login(req, res) {
   
   function addContact(req, res){
     const db = req.app.get('db');
+    const user_id = req.params.user
     const { first_name, last_name, home_phone,	mobile_phone,	work_phone,	email,	city,	state_or_province, postal_code,	country } = req.body;
+    const temp = [];
     db.contact
     .insert(
       {
-        first_name, 
-        last_name, 
-        home_phone,	
+        first_name,
+        last_name,
+        home_phone,
         mobile_phone,
-        work_phone,	
-        email,	
-        city,	
-        state_or_province, 
-        postal_code,	
-        country
-      },
-     
+        work_phone,
+        email,
+        city,
+        state_or_province,
+        postal_code,
+        country,
+      }
     )
-    .then(contact => res.status(201).json(contact))
-    .catch(err => {
-      console.error(err);
-    });
+    .then(data=>{
+        temp.push(data);
+        let contact_id = data.id;
+        // console.log(userId,"-",contactId);
+        
+        db.address_book
+        .insert(
+          {
+            user_id,
+            contact_id,
+          }
+        ).then(add=>{
+          console.log(add)
+          temp.push(add)
+          res.status(201).json(temp)
+        })
+    })
+    // .catch(err => {
+    //   console.error(err);
+    // });
   }
 
   function listContact(req, res) {
+
     const db = req.app.get('db');
-  
-    db.contact
-      .find()
-      .then(contact => res.status(200).json(contact))
-      .catch(err => {
-        console.error(err);
-        res.status(500).end();
-      });
+    const userID = req.query.id;
+    console.log(req.query.id)
+    db
+    .query(
+      `Select contact.* from users, contact, address_book WHERE users.id = address_book.user_id AND contact.id = address_book.contact_id AND users.id = ${userID} ORDER BY contact.first_name`,
+      {
+        id:req.query.id
+      }
+    )
+    .then(data=>{
+      res.status(200).json(data)
+    })
+  }
+
+  function sortContact(req, res) {
+    const db = req.app.get('db');
+    const userID = req.query.id;
+    console.log(req.query.id)
+    db
+    .query(
+      `Select contact.* from users, contact, address_book WHERE users.id = address_book.user_id AND contact.id = address_book.contact_id AND users.id = ${userID} ORDER BY contact.last_name`,
+      {
+        id:req.query.id
+      }
+    )
+    .then(data=>{
+      res.status(200).json(data)
+    })
   }
 
   function contactById(req, res) {
@@ -116,15 +154,15 @@ function login(req, res) {
         console.error(err);
         res.status(500).end();
       });
-  }
+  } 
 
   function deleteContact(req, res){
     const db = req.app.get('db');
     const contactId = req.params.id;
-    // db.query(`DELETE FROM addressbook WHERE contact_id=${contacts_id}`)
-    // .then(() => {
+    db.query(`DELETE FROM address_book WHERE contact_id=${contactId}`)
+    .then(() => {
     db.query(`DELETE FROM contact WHERE id=${contactId}`)
-    // })
+    })
     .then(response => {
       res.status(200).json(response);
     }).catch(err => {
@@ -132,7 +170,8 @@ function login(req, res) {
       res.status(500).end()
     });
   }
-  
+
+
 
   function protected(req, res) {
     if (!req.headers.authorization) {
@@ -156,7 +195,9 @@ function login(req, res) {
     addContact,
     listContact,
     contactById,
-    deleteContact
+    deleteContact,
+    sortContact
+    // sampleClick
   };
   
   // server/index.js - register the handler

@@ -78,7 +78,8 @@ export default function SignIn() {
     .then(res =>{
       localStorage.setItem('token', res.data.token);
       setToken({token: res.data.token});
-      window.location.href = '#/addressbook'  
+      console.log(res)
+      window.location.href = `#/addressbook`
     }
     
     )

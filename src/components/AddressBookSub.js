@@ -25,6 +25,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button'
 import AddBox from '@material-ui/icons/AddBox';
+import jwtDecode from 'jwt-decode';
 // import axios from 'axios'
 // import AddBox from '@material-ui/icons/AddBox';
 // import Tooltip from '@material-ui/core/Tooltip';
@@ -48,6 +49,7 @@ const useStyles = makeStyles(theme => ({
 
 
 export default function AddressBookSub() {
+
     const classes = useStyles();
     // const [contactMount, setContactMount] = useState(true)
     const [contactList, setContactList] = useState([])
@@ -65,6 +67,14 @@ export default function AddressBookSub() {
       postal_code: "",
       country: ""
     })
+
+    const token = localStorage.getItem('token');
+    if(!token){
+     window.location.href='/';
+     }
+   
+   var decoded = jwtDecode(token);
+   const current_user = decoded.userId;
 
     
  
@@ -88,9 +98,10 @@ export default function AddressBookSub() {
       
     }
 
-    const handleAddContact = () => {
+    const handleAddContact = e => {
+      // console.log(e.target)
       axios({
-              url: 'http://localhost:3001/api/contact',
+              url: `http://localhost:3001/api/contact/${current_user}`,
               method: 'post',
               json: true,
               data: inputValues,
@@ -108,15 +119,25 @@ export default function AddressBookSub() {
   //     // console.log(res)
   //   })
   // }
-  
-    
   useEffect(() => {
-    axios.get('http://localhost:3001/api/contact')
+    axios.get(`http://localhost:3001/api/contact/list?id=${current_user}`)
     .then(res => {
       setContactList(res.data);
       setLoaderState(false);
     })
   }, [contactList])
+
+  const handleSortLastName = () => {
+    // console.log('hi')
+    axios.get(`http://localhost:3001/api/contact/lastname?id=${current_user}`)
+    .then(res => {
+      setContactList(res.data);
+      setLoaderState(false);
+    })
+  }
+  
+    
+
       
   return (
     <React.Fragment>
@@ -153,7 +174,9 @@ export default function AddressBookSub() {
         <TableHead
         >
           <TableRow>
-            <TableCell >Last Name</TableCell>
+            <TableCell 
+            onClick = {handleSortLastName}
+            >Last Name</TableCell>
             <TableCell align="left">First Name</TableCell>
             <TableCell>Mobile Number</TableCell>
             <TableCell 
@@ -342,7 +365,7 @@ export default function AddressBookSub() {
                   </Button>
                   <Button
                   onClick={handleAddContact} 
-                  color="primary" 
+                  color="primary"
                   >
                     ADD
                   </Button>
