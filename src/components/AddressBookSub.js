@@ -57,6 +57,8 @@ export default function AddressBookSub() {
     const [loaderState, setLoaderState] = useState(true)
     const [open, setOpen] = useState(false);
     const [editopen, setEditOpen] = useState(false);
+    const [sortCLick, setSortClick] = useState(false);
+
     const [inputValues, setInputValues] = useState({
       first_name: "",
       last_name: "",
@@ -93,9 +95,7 @@ export default function AddressBookSub() {
    var decoded = jwtDecode(token);
    const current_user = decoded.userId;
 
-    
- 
-    // }
+   
 
     const handleClickOpen = () => {
       setOpen(true);
@@ -105,10 +105,6 @@ export default function AddressBookSub() {
       setOpen(false);
     }
 
-    // const handleEditOpen = () => {
-    //   setEditOpen(true);
-    // }
-    
     const handleEditClose = () => {
       setEditOpen(false);
     }
@@ -156,23 +152,27 @@ export default function AddressBookSub() {
   //   })
   // }
   useEffect(() => {
-    axios.get(`http://localhost:3001/api/contact/list?id=${current_user}`)
-    .then(res => {
+    if(!sortCLick){
+      axios.get(`http://localhost:3001/api/contact/list?id=${current_user}`)
+      .then(res => {
+        setContactList(res.data);
+        setLoaderState(false);
+      })
+    }else{
+      axios.get(`http://localhost:3001/api/contact/lastname?id=${current_user}`)
+      .then(res => {
       setContactList(res.data);
       setLoaderState(false);
     })
-  }, [contactList])
+    }
+    // console.log(editValues)
+   
+  }, [contactList, editValues])
 
-  const handleSortLastName = () => {
-    // console.log('hi')
-    axios.get(`http://localhost:3001/api/contact/lastname?id=${current_user}`)
-    .then(res => {
-      setContactList(res.data);
-      setLoaderState(false);
-    })
+  const handleSortLastName = e => {
+    setSortClick(!sortCLick)
   }
   
-    
 
       
   return (
@@ -191,16 +191,11 @@ export default function AddressBookSub() {
       alignItems:'center'
     }}
     >
-    {/* <Tooltip title="Add New Contact" placement="right"> */}
     <AddBox onClick={handleClickOpen}/>
-    {/* </Tooltip> */}
     <TextField
         id="standard-search"
         label="Search"
         type="search"
-        // className={classes.textField}
-
-        // margin="normal"
     />
    
     </span>
@@ -257,7 +252,21 @@ export default function AddressBookSub() {
               <Create
               onClick={()=>{
                 setEditOpen(true);
-                setCurrentRow(res)
+                setCurrentRow(res);
+                setEditValues({...editValues, 
+                  first_name: res.first_name,
+                  last_name: res.last_name,
+                  home_phone: res.home_phone,
+                  mobile_phone: res.mobile_phone,
+                  work_phone: res.work_phone,
+                  email: res.email,
+                  city: res.city,
+                  state_or_province: res.state_or_province,
+                  postal_code: res.postal_code,
+                  country: res.country
+                 // console.log(na)
+                })
+                
                 }}
               // value={res.id}
                />
@@ -266,6 +275,7 @@ export default function AddressBookSub() {
               style={{
                 cursor: 'pointer'
               }}>
+          
               
                <DeleteOutlined
                 onClick={() => {
@@ -288,7 +298,7 @@ export default function AddressBookSub() {
       </Table>
       {loaderState? <h1>Loading</h1>:''}
     </Paper>
-
+      {/* {console.log(editValues)} */}
     <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" className={classes.dialog}>
                   <DialogTitle id="form-dialog-title" className={classes.dialogTitle}>
                     ADD NEW CONTACT
@@ -412,7 +422,7 @@ export default function AddressBookSub() {
               </Dialog>
 
 
-              <Dialog open={editopen} onClose={handleEditClose} aria-labelledby="form-dialog-title" className={classes.dialog}>
+    <Dialog open={editopen} onClose={handleEditClose} aria-labelledby="form-dialog-title" className={classes.dialog}>
                   <DialogTitle id="form-dialog-title" className={classes.dialogTitle}>
                     EDIT CONTACT
                   </DialogTitle>
@@ -429,7 +439,7 @@ export default function AddressBookSub() {
                         label="First name"
                         fullWidth
                         onChange={handleEditChange}
-                        defaultValue={currentRow.first_name}
+                        defaultValue={editValues.first_name}
                         // autoComplete="fname"
                       />
                     </Grid>
@@ -441,7 +451,7 @@ export default function AddressBookSub() {
                         label="Last name"
                         onChange={handleEditChange}
                         fullWidth
-                        defaultValue={currentRow.last_name}
+                        defaultValue={editValues.last_name}
                         // autoComplete="lname"
                       />
                     </Grid>
@@ -452,7 +462,7 @@ export default function AddressBookSub() {
                         name="email"
                         label="Email Address"
                         onChange={handleEditChange}
-                        defaultValue={currentRow.email}
+                        defaultValue={editValues.email}
                         fullWidth
                       />
                     </Grid>
@@ -463,7 +473,7 @@ export default function AddressBookSub() {
                         name="mobile_phone"
                         label="Mobile Phone"
                         onChange={handleEditChange}
-                        defaultValue={currentRow.mobile_phone}
+                        defaultValue={editValues.mobile_phone}
                         fullWidth
                       />
                     </Grid>
@@ -474,7 +484,7 @@ export default function AddressBookSub() {
                         name="home_phone"
                         label="Home Phone"
                         onChange={handleEditChange}
-                        defaultValue={currentRow.home_phone}
+                        defaultValue={editValues.home_phone}
                         fullWidth
                       />
                     </Grid>
@@ -485,7 +495,7 @@ export default function AddressBookSub() {
                         name="work_phone"
                         label="Work Phone"
                         onChange={handleEditChange}
-                        defaultValue={currentRow.work_phone}
+                        defaultValue={editValues.work_phone}
                         fullWidth
                       />
                     </Grid>
@@ -496,7 +506,7 @@ export default function AddressBookSub() {
                         name="city"
                         label="City"
                         onChange={handleEditChange}
-                        defaultValue={currentRow.city}
+                        defaultValue={editValues.city}
                         fullWidth
                         autoComplete="billing address-level2"
                       />
@@ -506,7 +516,7 @@ export default function AddressBookSub() {
                       id="state_or_province" 
                       name="state_or_province" 
                       label="State/Province/Region"
-                      defaultValue={currentRow.state_or_province}
+                      defaultValue={editValues.state_or_province}
                       fullWidth />
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -516,7 +526,7 @@ export default function AddressBookSub() {
                         name="postal_code"
                         label="Zip / Postal code"
                         onChange={handleEditChange}
-                        defaultValue={currentRow.postal_code}
+                        defaultValue={editValues.postal_code}
                         fullWidth
                         autoComplete="billing postal-code"
                       />
@@ -528,7 +538,7 @@ export default function AddressBookSub() {
                         name="country"
                         label="Country"
                         onChange={handleEditChange}
-                        defaultValue={currentRow.country}
+                        defaultValue={editValues.country}
                         fullWidth
                         autoComplete="billing country"
                       />
