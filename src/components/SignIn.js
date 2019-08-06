@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -9,7 +9,6 @@ import {Link} from 'react-router-dom';
 import axios from 'axios';
 import 'react-toastify/dist/ReactToastify.min.css'; 
 import { ToastContainer } from 'react-toastify';
-// import { EventEmitter } from 'events';
 import { toast } from 'react-toastify';
 
 
@@ -51,6 +50,15 @@ export default function SignIn() {
 
   // const [toaster, setToaster] = useState(true)
 
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    if(token){
+      window.location.href = `#/addressbook`
+    }else{
+      window.location.href = `#/`
+    }
+  }, [])
+
   const handleOnChange = event => {
     const { name, value, id } = event.target;
     setInputValues({ ...inputValues, [name]: value });
@@ -77,6 +85,7 @@ export default function SignIn() {
     })
     .then(res =>{
       localStorage.setItem('token', res.data.token);
+      localStorage.setItem('name', (`${res.data.firstName} ${res.data.lastName}`))
       // setToken({token: res.data.token});
       console.log(res)
       window.location.href = `#/addressbook`

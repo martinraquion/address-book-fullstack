@@ -11,6 +11,15 @@ import TextField from '@material-ui/core/TextField';
 import DeleteOutlined from '@material-ui/icons/DeleteSweepOutlined'
 import AddBox from '@material-ui/icons/AddBox';
 import Create from '@material-ui/icons/CreateOutlined';
+import ArrowDown from '@material-ui/icons/ArrowDropDown';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import Grid from '@material-ui/core/Grid';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import Divider from '@material-ui/core/Divider';
+import ArrowRight from '@material-ui/icons/ArrowRight';
+
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
 //COMPONENTS ADDED
@@ -29,7 +38,13 @@ const useStyles = makeStyles(theme => ({
   },
   table: {
     minWidth: 650,
+    
   },
+  tablecell: {
+    fontSize: '15px',
+    background: '#010A26',
+    color: 'white'
+  }
   
 }));
 
@@ -41,6 +56,7 @@ export default function AddressBook() {
     const [open, setOpen] = useState(false);
     const [editopen, setEditOpen] = useState(false);
     const [sortCLick, setSortClick] = useState(false);
+    const [openDetails, setOpenDetails] = useState(false)
     const [currentRow, setCurrentRow] = useState([]);
     const [inputValues, setInputValues] = useState({
       first_name: "",
@@ -117,45 +133,57 @@ export default function AddressBook() {
       setEditValues({...editValues, 
       [name]: value
       })
-      console.log(value)      
+      console.log(value)   
+
     }
 
     const handleAddContact = e => {
+      setLoaderState(false)
       axios({
               url: `http://localhost:3001/api/contact/${current_user}`,
               method: 'post',
               json: true,
               data: inputValues,
-          })
+          }).then(
+            setLoaderState(true)
+            )
       setOpen(false)
     }
 
     const handleEditContact = () => {
+      
         axios({
             method: 'patch',
             url: ` http://localhost:3001/api/update?cid=${currentRow.id}`,
             json: true,
             data: editValues
-            })
+            }).then(
+            setLoaderState(true)
+            )
         setEditOpen(false)
+       
     }
 
     const handleSortLastName = e => {
         setSortClick(!sortCLick)
     }
-  
 
+
+  
       
   return (
     <React.Fragment>
     <ButtonAppBar />
-    
     <Container 
-    maxWidth='lg'
+    maxWidth='xl'
     style={{
-      marginTop: '40px'
+      marginTop: '20px',
+      color: '#D98723'
     }}
     >
+    <Grid container spacing={3}>
+    <Grid item xs={12} md={openDetails?10:12}>
+   
     <span
     style={{
       display: 'flex',
@@ -163,7 +191,13 @@ export default function AddressBook() {
       alignItems:'center'
     }}
     >
-    <AddBox onClick={handleClickOpen}/>
+    <AddBox onClick={handleClickOpen}
+      style={{
+        fontSize: '30px',
+        marginTop: '20px',
+        cursor: 'pointer'
+      }}
+    />
     <TextField
         id="standard-search"
         label="Search"
@@ -172,17 +206,27 @@ export default function AddressBook() {
    
     </span>
     
-<Paper className={classes.root}>    
+  <Paper className={classes.root}>   
+  {loaderState? <LinearProgress /> :''} 
       <Table className={classes.table}>
-        <TableHead
-        >
+        <TableHead>
           <TableRow>
+          
             <TableCell 
             onClick = {handleSortLastName}
-            >Last Name</TableCell>
-            <TableCell align="left">First Name</TableCell>
-            <TableCell>Mobile Number</TableCell>
-            <TableCell 
+            className = {classes.tablecell}
+            >
+            Last Name 
+            {/* <ArrowDown 
+              style={{
+                marginTop:'8px'
+              }}
+            /> */}
+           
+            </TableCell>
+            <TableCell align="left" className = {classes.tablecell}>First Name</TableCell>
+            <TableCell className = {classes.tablecell}>Mobile Number</TableCell>
+            <TableCell className = {classes.tablecell}
             >
             <span
             style={{
@@ -194,6 +238,7 @@ export default function AddressBook() {
             </span>
             
             </TableCell>
+            
 
           </TableRow>
         </TableHead>
@@ -202,7 +247,15 @@ export default function AddressBook() {
         
           {contactList.map(res => (
             
-            <TableRow key={res.id}>
+            <TableRow key={res.id}
+            onClick={()=>{
+              setOpenDetails(true)
+              setCurrentRow(res)
+            }}
+            style={{
+              cursor:'pointer'
+            }}
+            >
               <TableCell component="th" scope="row">
                 {res.last_name}
               </TableCell>
@@ -218,7 +271,8 @@ export default function AddressBook() {
               }}>
               <span
               style={{
-                cursor: 'pointer'
+                cursor: 'pointer',
+                color: '#D98723'
               }}
               >
               <Create
@@ -243,13 +297,16 @@ export default function AddressBook() {
               // value={res.id}
                />
               </span>
+
               <span
               style={{
-                cursor: 'pointer'
+                cursor: 'pointer',
+                color: '#D98723'
               }}>
           
-              
+               
                <DeleteOutlined
+                // onClick={handleDeleteStat}
                 onClick={() => {
                     axios(`http://localhost:3001/api/contact/${res.id}`, {
                     method: 'delete',
@@ -261,6 +318,14 @@ export default function AddressBook() {
                 />
                 {/* <span>confirm</span> */}
                </span>
+               <span
+              style={{
+                cursor: 'pointer',
+                color: '#D98723'
+              }}>
+                <ArrowRight />
+              </span>
+               
                </span>
               </TableCell>
 
@@ -268,7 +333,7 @@ export default function AddressBook() {
           ))}
         </TableBody>
       </Table>
-      {loaderState? <h1>Loading</h1>:''}
+      
     </Paper>
     
     <AddDialog 
@@ -286,6 +351,65 @@ export default function AddressBook() {
         handleEditClose={handleEditClose}
         handleEditContact={handleEditContact}
     />
+    
+    </Grid>
+    {openDetails?
+    <Grid item xs={12} md={2}>
+    <Paper className={classes.root}>
+    {/* <Typography>Contact Details</Typography>   */}
+   
+    <List >
+      <ListItem
+      style={{
+        background: '#010A26',
+        color: 'white'
+      }}
+      >
+        <ListItemText primary="CONTACT DETAILS" inset={true}/>
+
+      </ListItem>
+      <Divider />
+   
+      <ListItem>
+        <ListItemText primary={`${currentRow.first_name} ${currentRow.last_name}`} secondary="Name" />
+      </ListItem>
+      <Divider />
+      <ListItem>
+        <ListItemText primary={currentRow.email} secondary="Email" />
+      </ListItem>
+      <Divider />
+      <ListItem>
+       <ListItemText primary={currentRow.mobile_phone} secondary="Mobile Number" />
+      </ListItem>
+      <Divider />
+      <ListItem>
+       <ListItemText primary={currentRow.home_phone} secondary="Home Number" />
+      </ListItem>
+      <Divider />
+      <ListItem>
+       <ListItemText primary={currentRow.work_phone} secondary="Work Number" />
+      </ListItem>
+      <Divider />
+      <ListItem>
+       <ListItemText primary={currentRow.postal_code} secondary="Postal Code" />
+      </ListItem>
+      <Divider />
+      <ListItem>
+       <ListItemText primary={currentRow.city} secondary="City" />
+      </ListItem>
+      <Divider />
+      <ListItem>
+       <ListItemText primary={currentRow.state_or_province} secondary="State or Province" />
+      </ListItem>
+      <Divider />
+      <ListItem>
+       <ListItemText primary={currentRow.country} secondary="Country" />
+      </ListItem>
+    </List>
+    </Paper>
+    </Grid>: 
+    ''}
+    </Grid>
     </Container>
     </React.Fragment>
   );

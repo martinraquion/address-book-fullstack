@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -34,6 +34,15 @@ const useStyles = makeStyles(theme => ({
 
 export default function Form() {
   const classes = useStyles();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    if(token){
+      window.location.href = `#/addressbook`
+    }else if(!token){
+      window.location.href = `#/register`
+    }
+  }, [])
 
   const [inputValues, setInputValues] = useState({
     firstName:'',
@@ -75,6 +84,7 @@ export default function Form() {
       data:inputValues
     })
     .then(res =>{
+      window.location.href = `#/`
       console.log(res)
     }
     

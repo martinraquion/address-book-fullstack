@@ -41,7 +41,7 @@ function login(req, res) {
           username,
         },
         {
-          fields: ['id', 'username', 'email', 'password'],
+          fields: ['id', 'username', 'email', 'password', 'firstName', 'lastName'],
         }
       )
       .then(user => {
@@ -118,7 +118,7 @@ function login(req, res) {
     // console.log(req.query.id)
     db
     .query(
-      `Select contact.* from users, contact, address_book WHERE users.id = address_book.user_id AND contact.id = address_book.contact_id AND users.id = ${userID} ORDER BY contact.first_name`,
+      `Select contact.* from users, contact, address_book WHERE users.id = address_book.user_id AND contact.id = address_book.contact_id AND users.id = ${userID} ORDER BY contact.last_name`,
       {
         id:req.query.id
       }
@@ -134,7 +134,7 @@ function login(req, res) {
     // console.log(req.query.id)
     db
     .query(
-      `Select contact.* from users, contact, address_book WHERE users.id = address_book.user_id AND contact.id = address_book.contact_id AND users.id = ${userID} ORDER BY contact.last_name`,
+      `Select contact.* from users, contact, address_book WHERE users.id = address_book.user_id AND contact.id = address_book.contact_id AND users.id = ${userID} ORDER BY contact.last_name DESC`,
       {
         id:req.query.id
       }

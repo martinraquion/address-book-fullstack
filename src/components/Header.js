@@ -5,21 +5,24 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import {Link} from 'react-router-dom';
-// import IconButton from '@material-ui/core/IconButton';
-// import { Link } from '@material-ui/core';
-// import MenuIcon from '@material-ui/icons/Menu';
 
 const useStyles = makeStyles(theme => ({
+  background:{
+    backgroundColor: '#00040D',
+  },
   root: {
     flexGrow: 1,
   },
   title: {
     flexGrow: 1,
+    color: '#D98723'
   },
 }));
 
 export default function ButtonAppBar() {
   const classes = useStyles();
+
+  const logged_name = localStorage.getItem('name')
 
   const handleClick = () =>{
     localStorage.clear()
@@ -27,21 +30,27 @@ export default function ButtonAppBar() {
 
   return (
     <div className={classes.root}>
-      <AppBar position="static">
+      <AppBar position="static" className={classes.background}>
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
-            Address Book
+             ADDRESS BOOK  
           </Typography>
+          {/* {logged_name} | */}
           <Link to='/'
           style={{
             textDecoration: 'none',
             color: 'white'
           }}
           >
-          <Button color="inherit"
+          <Button 
+          // color="inherit"
           onClick={handleClick}
+          // variant="contained"  
+          style={{
+            color: '#D98723'
+          }}
           >
-          Logout
+         Logout
           </Button>
           </Link>
         </Toolbar>
