@@ -14,6 +14,14 @@ import Create from '@material-ui/icons/CreateOutlined';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Grid from '@material-ui/core/Grid';
 import ArrowRight from '@material-ui/icons/ArrowRight';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
+
 
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
@@ -21,7 +29,8 @@ import jwtDecode from 'jwt-decode';
 import ButtonAppBar from './Header';
 import AddDialog from './dialogs/AddDialog'
 import EditDialog from './dialogs/EditDialog'
-import ContactView from './views/contactView'
+import DeleteDialog from './dialogs/DeleteDialog'
+import ContactView from './views/ContactView'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -40,6 +49,11 @@ const useStyles = makeStyles(theme => ({
     fontSize: '15px',
     background: '#010A26',
     color: 'white'
+  },
+  tableHover: {
+    '&:hover': {
+        background: '#ebebeb'
+   },
   }
   
 }));
@@ -50,11 +64,13 @@ export default function AddressBook() {
     const [contactList, setContactList] = useState([])
     const [loaderState, setLoaderState] = useState(true)
     const [open, setOpen] = useState(false);
+    const [deleteopen, setDeleteOpen] = useState(false)
     const [editopen, setEditOpen] = useState(false);
     const [sortCLick, setSortClick] = useState(false);
     const [openDetails, setOpenDetails] = useState(false)
     const [currentRow, setCurrentRow] = useState([]);
     const [searchKeyword, setSearchKeyword] = useState('')
+    const [color, setColor]=useState('white')
     const [inputValues, setInputValues] = useState({
       first_name: "",
       last_name: "",
@@ -88,6 +104,7 @@ export default function AddressBook() {
     var decoded = jwtDecode(token);
     const current_user = decoded.userId;
 
+   
 
     useEffect(() => {
         if(!sortCLick){
@@ -117,6 +134,10 @@ export default function AddressBook() {
 
     const handleEditClose = () => {
       setEditOpen(false);
+    }
+
+    function handleDeleteClose() {
+      setDeleteOpen(false);
     }
 
     const handleChange = e => {
@@ -149,6 +170,7 @@ export default function AddressBook() {
             setLoaderState(true)
             )
       setOpen(false)
+      setCurrentRow(inputValues)
     }
 
     const handleEditContact = () => {
@@ -164,6 +186,16 @@ export default function AddressBook() {
         setEditOpen(false)
         setCurrentRow(editValues)
        
+    }
+
+    const handleDeleteContact = () => {
+      axios(`http://localhost:3001/api/contact/${currentRow.id}`, {
+            method: 'delete',
+            }).then(function (res) {
+            console.log(res)
+            })
+      setDeleteOpen(false)
+      setOpenDetails(false)
     }
 
     const handleSortLastName = e => {
@@ -194,8 +226,8 @@ export default function AddressBook() {
       color: '#D98723'
     }}
     >
-    <Grid container spacing={3}>
-    <Grid item xs={12} md={openDetails?10:12}>
+    <Grid container spacing={4}>
+    <Grid item xs={12} md={openDetails?9:12}>
    
     <span
     style={{
@@ -255,21 +287,37 @@ export default function AddressBook() {
         <TableBody>
         
           {contactFiltered.map(res => (
-            
+            <React.Fragment key={res.id}>
+          
             <TableRow key={res.id}
             onClick={()=>{
               setOpenDetails(true)
               setCurrentRow(res)
             }}
+            className={classes.tableHover}
             style={{
-              cursor:'pointer'
+              cursor:'pointer',
+              backgroundColor: ((res.id===currentRow.id)?'#D98723':''),
             }}
+            
             >
-              <TableCell component="th" scope="row">
+              <TableCell component="th" scope="row"
+              style={{
+                color: ((res.id===currentRow.id)?'white':'black')
+              }}
+              >
                 {res.last_name}
               </TableCell>
-              <TableCell >{res.first_name}</TableCell>
-              <TableCell >{res.home_phone}</TableCell>
+              <TableCell 
+               style={{
+                color: ((res.id===currentRow.id)?'white':'black')
+              }}
+              >{res.first_name}</TableCell>
+              <TableCell 
+               style={{
+                color: ((res.id===currentRow.id)?'white':'black')
+              }}
+              >{res.home_phone}</TableCell>
               <TableCell 
               > 
               <span style={{
@@ -280,7 +328,7 @@ export default function AddressBook() {
               <span
               style={{
                 cursor: 'pointer',
-                color: '#D98723'
+                color: ((res.id===currentRow.id)?'white':'#D98723')
               }}
               >
               <Create
@@ -307,32 +355,18 @@ export default function AddressBook() {
               <span
               style={{
                 cursor: 'pointer',
-                color: '#D98723'
+                color: ((res.id===currentRow.id)?'white':'#D98723')
               }}>
-          
+
+              {(res.id===currentRow.id)? <ArrowRight />:''}
                
-               <DeleteOutlined
-                onClick={() => {
-                    axios(`http://localhost:3001/api/contact/${currentRow.id}`, {
-                    method: 'delete',
-                    }).then(function (res) {
-                    console.log(res)
-                    })
-                }}
-                />
-               </span>
-               <span
-              style={{
-                cursor: 'pointer',
-                color: '#D98723'
-              }}>
-                <ArrowRight />
               </span>
                
                </span>
               </TableCell>
 
             </TableRow>
+            </React.Fragment>
           ))}
         </TableBody>
       </Table>
@@ -343,6 +377,7 @@ export default function AddressBook() {
         handleAddContact={handleAddContact}
         handleChange={handleChange}
         handleClose={handleClose}
+        setCurrentRow={setCurrentRow}
         open={open}
     />
 
@@ -355,14 +390,30 @@ export default function AddressBook() {
         handleEditContact={handleEditContact}
     />
     
+    <DeleteDialog 
+      deleteopen={deleteopen}
+      handleDeleteClose={handleDeleteClose}
+      handleDeleteContact={handleDeleteContact}
+      currentRow={currentRow}
+      
+    />
+
     </Grid>
     {openDetails?
-    <Grid item xs={12} md={2}>
-    <ContactView currentRow={currentRow}/>
-    </Grid>: 
+    <Grid item xs={12} md={3}>
+    <ContactView 
+    currentRow={currentRow}
+    setDeleteOpen={setDeleteOpen}
+    setOpenDetails={setOpenDetails}
+    />
+    </Grid>
+    : 
     ''}
+  
     </Grid>
     </Container>
+
+    
     </React.Fragment>
   );
 }

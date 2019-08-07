@@ -4,8 +4,15 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Divider from '@material-ui/core/Divider';
 import ListItemText from '@material-ui/core/ListItemText';
+import DeleteOutlined from '@material-ui/icons/DeleteSweepOutlined';
+import Close from '@material-ui/icons/Close';
+import { borderRight } from '@material-ui/system';
 
-export default function contactView({currentRow}){
+export default function contactView({
+  currentRow, 
+  setDeleteOpen,
+  setOpenDetails
+}){
      return(
         <Paper >   
         <List >
@@ -16,7 +23,34 @@ export default function contactView({currentRow}){
           }}
           >
             <ListItemText primary="CONTACT DETAILS" />
-    
+            <span 
+            style={{
+              width: '15%',
+              display: 'flex',
+              justifyContent: 'space-between'
+            }}
+            > 
+            <DeleteOutlined style={{
+              cursor: 'pointer',
+              borderRight: '1px solid white',
+              paddingRight: '10px',
+              color: '#D98723'
+            }}
+            onClick={()=>{
+              setDeleteOpen(true)
+            }}
+             /> 
+             <Close style={{
+              paddingLeft: '8px',
+              cursor: 'pointer',
+              color: '#D98723'
+            }}
+             onClick={()=>{
+              setOpenDetails(false)
+            }} />
+            </span>
+             
+            
           </ListItem>
           <Divider />
        
