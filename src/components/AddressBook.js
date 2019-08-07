@@ -11,13 +11,8 @@ import TextField from '@material-ui/core/TextField';
 import DeleteOutlined from '@material-ui/icons/DeleteSweepOutlined'
 import AddBox from '@material-ui/icons/AddBox';
 import Create from '@material-ui/icons/CreateOutlined';
-import ArrowDown from '@material-ui/icons/ArrowDropDown';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Grid from '@material-ui/core/Grid';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import Divider from '@material-ui/core/Divider';
 import ArrowRight from '@material-ui/icons/ArrowRight';
 
 import axios from 'axios';
@@ -26,6 +21,7 @@ import jwtDecode from 'jwt-decode';
 import ButtonAppBar from './Header';
 import AddDialog from './dialogs/AddDialog'
 import EditDialog from './dialogs/EditDialog'
+import ContactView from './views/contactView'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -79,7 +75,7 @@ export default function AddressBook() {
       email: "",
       city:"",
       state_or_province: "",
-      postal_code: "",
+      postal_code: 0,
       country: ""
     });
 
@@ -106,7 +102,7 @@ export default function AddressBook() {
         setLoaderState(false);
         })
         }   
-    }, [contactList, editValues])
+    }, [contactList, editValues, currentRow, current_user, sortCLick])
    
 
     const handleClickOpen = () => {
@@ -161,6 +157,7 @@ export default function AddressBook() {
             setLoaderState(true)
             )
         setEditOpen(false)
+        setCurrentRow(editValues)
        
     }
 
@@ -217,11 +214,6 @@ export default function AddressBook() {
             className = {classes.tablecell}
             >
             Last Name 
-            {/* <ArrowDown 
-              style={{
-                marginTop:'8px'
-              }}
-            /> */}
            
             </TableCell>
             <TableCell align="left" className = {classes.tablecell}>First Name</TableCell>
@@ -264,7 +256,6 @@ export default function AddressBook() {
               <TableCell 
               > 
               <span style={{
-                 // style={{
                 display: 'flex',
                 justifyContent: 'space-evenly',
                
@@ -290,11 +281,9 @@ export default function AddressBook() {
                   state_or_province: res.state_or_province,
                   postal_code: res.postal_code,
                   country: res.country
-                 // console.log(na)
                 })
                 
                 }}
-              // value={res.id}
                />
               </span>
 
@@ -306,17 +295,14 @@ export default function AddressBook() {
           
                
                <DeleteOutlined
-                // onClick={handleDeleteStat}
                 onClick={() => {
-                    axios(`http://localhost:3001/api/contact/${res.id}`, {
+                    axios(`http://localhost:3001/api/contact/${currentRow.id}`, {
                     method: 'delete',
                     }).then(function (res) {
-                    // setComponent(true)
                     console.log(res)
                     })
                 }}
                 />
-                {/* <span>confirm</span> */}
                </span>
                <span
               style={{
@@ -355,58 +341,7 @@ export default function AddressBook() {
     </Grid>
     {openDetails?
     <Grid item xs={12} md={2}>
-    <Paper className={classes.root}>
-    {/* <Typography>Contact Details</Typography>   */}
-   
-    <List >
-      <ListItem
-      style={{
-        background: '#010A26',
-        color: 'white'
-      }}
-      >
-        <ListItemText primary="CONTACT DETAILS" inset={true}/>
-
-      </ListItem>
-      <Divider />
-   
-      <ListItem>
-        <ListItemText primary={`${currentRow.first_name} ${currentRow.last_name}`} secondary="Name" />
-      </ListItem>
-      <Divider />
-      <ListItem>
-        <ListItemText primary={currentRow.email} secondary="Email" />
-      </ListItem>
-      <Divider />
-      <ListItem>
-       <ListItemText primary={currentRow.mobile_phone} secondary="Mobile Number" />
-      </ListItem>
-      <Divider />
-      <ListItem>
-       <ListItemText primary={currentRow.home_phone} secondary="Home Number" />
-      </ListItem>
-      <Divider />
-      <ListItem>
-       <ListItemText primary={currentRow.work_phone} secondary="Work Number" />
-      </ListItem>
-      <Divider />
-      <ListItem>
-       <ListItemText primary={currentRow.postal_code} secondary="Postal Code" />
-      </ListItem>
-      <Divider />
-      <ListItem>
-       <ListItemText primary={currentRow.city} secondary="City" />
-      </ListItem>
-      <Divider />
-      <ListItem>
-       <ListItemText primary={currentRow.state_or_province} secondary="State or Province" />
-      </ListItem>
-      <Divider />
-      <ListItem>
-       <ListItemText primary={currentRow.country} secondary="Country" />
-      </ListItem>
-    </List>
-    </Paper>
+    <ContactView currentRow={currentRow}/>
     </Grid>: 
     ''}
     </Grid>
