@@ -36,21 +36,28 @@ export default function ButtonAppBar() {
              ADDRESS BOOK  
           </Typography>
           {/* {logged_name} | */}
+        
+          <Button
+          style={{
+            color: '#D98723'
+          }}>
+          <span>{logged_name}</span>
+          </Button>
           <Link to='/'
           style={{
             textDecoration: 'none',
             color: 'white'
           }}
-          >
+          > | 
           <Button 
-          // color="inherit"
           onClick={handleClick}
-          // variant="contained"  
           style={{
             color: '#D98723'
           }}
           >
+         <span>
          Logout
+         </span>
           </Button>
           </Link>
         </Toolbar>

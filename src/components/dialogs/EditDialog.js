@@ -20,6 +20,10 @@ const useStyles = makeStyles(theme => ({
   table: {
     minWidth: 650,
   },
+  dialogTitle: {
+    backgroundColor: '#010A26',
+    color: '#D98723'
+  }
   
 }));
 

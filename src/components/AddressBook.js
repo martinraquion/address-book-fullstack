@@ -8,21 +8,11 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
-import DeleteOutlined from '@material-ui/icons/DeleteSweepOutlined'
 import AddBox from '@material-ui/icons/AddBox';
 import Create from '@material-ui/icons/CreateOutlined';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Grid from '@material-ui/core/Grid';
 import ArrowRight from '@material-ui/icons/ArrowRight';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-
-
-
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
 //COMPONENTS ADDED
@@ -70,7 +60,6 @@ export default function AddressBook() {
     const [openDetails, setOpenDetails] = useState(false)
     const [currentRow, setCurrentRow] = useState([]);
     const [searchKeyword, setSearchKeyword] = useState('')
-    const [color, setColor]=useState('white')
     const [inputValues, setInputValues] = useState({
       first_name: "",
       last_name: "",
@@ -121,7 +110,7 @@ export default function AddressBook() {
         })
         }
         // console.log(searchKeyword)   
-    }, [contactList, editValues, currentRow, current_user, sortCLick, searchKeyword])
+    }, [contactList, editValues])
    
 
     const handleClickOpen = () => {
@@ -226,7 +215,7 @@ export default function AddressBook() {
       color: '#D98723'
     }}
     >
-    <Grid container spacing={4}>
+    <Grid container spacing={5}>
     <Grid item xs={12} md={openDetails?9:12}>
    
     <span
@@ -322,7 +311,7 @@ export default function AddressBook() {
               > 
               <span style={{
                 display: 'flex',
-                justifyContent: 'space-evenly',
+                justifyContent: 'center',
                
               }}>
               <span
@@ -357,9 +346,7 @@ export default function AddressBook() {
                 cursor: 'pointer',
                 color: ((res.id===currentRow.id)?'white':'#D98723')
               }}>
-
-              {(res.id===currentRow.id)? <ArrowRight />:''}
-               
+              
               </span>
                
                </span>
