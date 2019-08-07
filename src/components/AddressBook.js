@@ -13,6 +13,7 @@ import Create from '@material-ui/icons/CreateOutlined';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Grid from '@material-ui/core/Grid';
 import ArrowRight from '@material-ui/icons/ArrowRight';
+import DeleteOutlined from '@material-ui/icons/DeleteSweepOutlined';
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
 //COMPONENTS ADDED
@@ -21,12 +22,16 @@ import AddDialog from './dialogs/AddDialog'
 import EditDialog from './dialogs/EditDialog'
 import DeleteDialog from './dialogs/DeleteDialog'
 import ContactView from './views/ContactView'
+import 'react-toastify/dist/ReactToastify.min.css'; 
+import { ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
     marginTop: theme.spacing(3),
     overflowX: 'auto',
+    
   },
   searchbar:{
     margin: theme.spacing(2,2,2,3)
@@ -35,6 +40,12 @@ const useStyles = makeStyles(theme => ({
     minWidth: 650,
     
   },
+
+  tableBody:{
+    height: '200px',
+    overflowY: 'auto',
+  },
+
   tablecell: {
     fontSize: '15px',
     background: '#010A26',
@@ -141,7 +152,6 @@ export default function AddressBook() {
       setEditValues({...editValues, 
       [name]: value
       })
-      console.log(value)   
     }
 
     const handleSearchInput = e => {
@@ -149,42 +159,57 @@ export default function AddressBook() {
     }
 
     const handleAddContact = e => {
-      setLoaderState(false)
+      setLoaderState(true)
+      setOpen(false)
       axios({
               url: `http://localhost:3001/api/contact/${current_user}`,
               method: 'post',
               json: true,
               data: inputValues,
-          }).then(
-            setLoaderState(true)
+          }).then(()=>{
+            setLoaderState(false);
+            
+            setCurrentRow(inputValues)
+            toast.success(`${inputValues.first_name} has been succesfully added to your contacts`);
+            }
             )
-      setOpen(false)
-      setCurrentRow(inputValues)
+     
+     
     }
 
     const handleEditContact = () => {
-      
+      setLoaderState(true)
+      setEditOpen(false)
         axios({
             method: 'patch',
             url: ` http://localhost:3001/api/update?cid=${currentRow.id}`,
             json: true,
             data: editValues
-            }).then(
-            setLoaderState(true)
+            }).then(()=>{
+            setLoaderState(false)
+            setCurrentRow(editValues)
+            toast.info(`${editValues.first_name}'s details has been updated`);
+            } 
             )
-        setEditOpen(false)
-        setCurrentRow(editValues)
+     
        
     }
 
     const handleDeleteContact = () => {
-      axios(`http://localhost:3001/api/contact/${currentRow.id}`, {
-            method: 'delete',
-            }).then(function (res) {
-            console.log(res)
-            })
+      setLoaderState(false)
       setDeleteOpen(false)
-      setOpenDetails(false)
+      axios({
+            method: 'delete',
+            url: `http://localhost:3001/api/contact/${currentRow.id}`
+            }).then(function(res){
+            setLoaderState(false)
+             toast.success(`${currentRow.first_name} has been removed from your contacts`);
+             setCurrentRow({
+              first_name: ' ',
+               last_name: ' '
+               })
+            })
+      
     }
 
     const handleSortLastName = e => {
@@ -273,7 +298,7 @@ export default function AddressBook() {
           </TableRow>
         </TableHead>
         
-        <TableBody>
+        <TableBody className={classes.tableBody}>
         
           {contactFiltered.map(res => (
             <React.Fragment key={res.id}>
@@ -306,7 +331,7 @@ export default function AddressBook() {
                style={{
                 color: ((res.id===currentRow.id)?'white':'black')
               }}
-              >{res.home_phone}</TableCell>
+              >{res.mobile_phone}</TableCell>
               <TableCell 
               > 
               <span style={{
@@ -346,9 +371,17 @@ export default function AddressBook() {
                 cursor: 'pointer',
                 color: ((res.id===currentRow.id)?'white':'#D98723')
               }}>
-              
+                <DeleteOutlined style={{
+              cursor: 'pointer',
+              paddingLeft: '10px',
+              color:((res.id===currentRow.id)?'white':'#D98723')
+            }}
+            onClick={()=>{
+              setDeleteOpen(true)
+            }}
+             /> 
               </span>
-               
+            
                </span>
               </TableCell>
 
@@ -399,6 +432,12 @@ export default function AddressBook() {
   
     </Grid>
     </Container>
+    <ToastContainer 
+    hideProgressBar
+    autoClose='2000'
+    position='bottom-left'
+    closeButton={false}
+     />
 
     
     </React.Fragment>

@@ -5,6 +5,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import {Link} from 'react-router-dom';
+import Icon from '@material-ui/core/Icon';
 
 const useStyles = makeStyles(theme => ({
   background:{
@@ -41,22 +42,33 @@ export default function ButtonAppBar() {
           style={{
             color: '#D98723'
           }}>
+          <span style={{display:'flex'}}>
+          <span><Icon>supervisor_account</Icon></span>
+          &nbsp;
           <span>{logged_name}</span>
+          </span>
           </Button>
           <Link to='/'
           style={{
             textDecoration: 'none',
             color: 'white'
           }}
-          > | 
+          >
+          <span style={{color:'#D98723'}}>|</span>
           <Button 
           onClick={handleClick}
           style={{
             color: '#D98723'
           }}
           >
+          <span style={{display:'flex'}}>
+          <span>
+          <Icon>power_settings_new</Icon>
+          </span> 
+          &nbsp;
          <span>
          Logout
+         </span>
          </span>
           </Button>
           </Link>

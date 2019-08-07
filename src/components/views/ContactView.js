@@ -36,7 +36,7 @@ export default function contactView({
               cursor: 'pointer',
               borderRight: '1px solid white',
               paddingRight: '10px',
-              color: '#D98723'
+              color: '#D98723',
             }}
             onClick={()=>{
               setDeleteOpen(true)
