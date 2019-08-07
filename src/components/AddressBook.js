@@ -54,6 +54,7 @@ export default function AddressBook() {
     const [sortCLick, setSortClick] = useState(false);
     const [openDetails, setOpenDetails] = useState(false)
     const [currentRow, setCurrentRow] = useState([]);
+    const [searchKeyword, setSearchKeyword] = useState('')
     const [inputValues, setInputValues] = useState({
       first_name: "",
       last_name: "",
@@ -101,8 +102,9 @@ export default function AddressBook() {
         setContactList(res.data);
         setLoaderState(false);
         })
-        }   
-    }, [contactList, editValues, currentRow, current_user, sortCLick])
+        }
+        // console.log(searchKeyword)   
+    }, [contactList, editValues, currentRow, current_user, sortCLick, searchKeyword])
    
 
     const handleClickOpen = () => {
@@ -130,7 +132,10 @@ export default function AddressBook() {
       [name]: value
       })
       console.log(value)   
+    }
 
+    const handleSearchInput = e => {
+      setSearchKeyword(e.target.value)
     }
 
     const handleAddContact = e => {
@@ -164,6 +169,17 @@ export default function AddressBook() {
     const handleSortLastName = e => {
         setSortClick(!sortCLick)
     }
+
+    const contactFiltered = contactList.filter((data)=>{
+      let word = searchKeyword.toLowerCase()
+      let fname = data.first_name.toLowerCase().indexOf(word) !== -1;
+      let lname = data.last_name.toLowerCase().indexOf(word) !== -1;
+      if(fname){
+        return fname;
+      }else{
+        return lname;
+      }
+    });
 
 
   
@@ -199,6 +215,7 @@ export default function AddressBook() {
         id="standard-search"
         label="Search"
         type="search"
+        onChange={handleSearchInput}
     />
    
     </span>
@@ -237,7 +254,7 @@ export default function AddressBook() {
         
         <TableBody>
         
-          {contactList.map(res => (
+          {contactFiltered.map(res => (
             
             <TableRow key={res.id}
             onClick={()=>{
