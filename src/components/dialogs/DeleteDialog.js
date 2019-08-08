@@ -10,7 +10,7 @@ export default function DeleteDialog ({
   deleteopen,
   handleDeleteClose,
   handleDeleteContact,
-  currentRow
+  currentRow,
 }){
     return (
         <Dialog

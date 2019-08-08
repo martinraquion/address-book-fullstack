@@ -9,7 +9,8 @@ import Button from '@material-ui/core/Button'
 export default function GroupDeleteDialog ({
   deleteopen,
   handleDeleteClose,
-  handleDeleteGroup
+  handleDeleteGroup,
+  currentRow
 }){
     return (
         <Dialog
@@ -18,10 +19,10 @@ export default function GroupDeleteDialog ({
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{`Remove  from your contacts?`}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{`Delete '${currentRow.name}' from your groups?`}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            You're about to delete from your contacts.
+            You're about to delete '{currentRow.name}' from your groups. All members will be also removed from this group
           </DialogContentText>
         </DialogContent>
         <DialogActions>

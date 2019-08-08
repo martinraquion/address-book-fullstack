@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useState, useEffect} from 'react'
 import Paper from '@material-ui/core/Paper';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -8,12 +8,47 @@ import DeleteOutlined from '@material-ui/icons/DeleteSweepOutlined';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import Icon from '@material-ui/core/Icon';
+import axios from 'axios'
+
+import MemberAdd from '../dialogs/MemberAddDialog'
 
 export default function ContactView({
   currentRow, 
   setDeleteOpen,
-  setOpenDetails
+  current_user,
+  // setOpenDetails,
+  openDetails
 }){
+
+  const [memberopen, setMemberOpen] = useState(false)
+  const [groupList, setGroupList] = useState([])
+  const [groupselected, setSelected] = useState('')
+
+  useEffect(() => {
+    axios({
+        method: 'get',
+        url: `http://localhost:3001/api/groups?id=${current_user}`,
+      }).then(function(response){
+        setGroupList([...response.data])   
+      })
+   
+  }, [groupList])
+
+  const handleSelectChange  = e =>{
+    setSelected(e.target.value)
+  } 
+
+  const handleAddMember = () => {
+    axios({
+      method: 'post',
+      url: `http://localhost:3001/api/addMember`,
+      data: {
+        "contact_id": currentRow.id,
+        "group_id": groupselected
+      }
+    }).then(res=>console.log(res))
+  }
+
      return(
         <Paper style={{
           marginBottom: 20
@@ -25,16 +60,34 @@ export default function ContactView({
             color: 'white'
           }}
           >
-            <ListItemText primary="CONTACT DETAILS" />
-           
+            <ListItemText primary={openDetails? 'CONTACT DETAILS': 'SELECT A CONTACT'} />
+            {openDetails?
+            <React.Fragment>
+            <Icon style={{cursor: 'pointer',color: '#D98723', marginRight: '10px'}}
+            onClick={()=>setMemberOpen(true)}
+            >group_add</Icon>
+            <MemberAdd 
+            // selectedContact={selectsedContact}
+            memberopen={memberopen}
+            setMemberOpen={setMemberOpen}
+            currentRow={currentRow}
+            groupList={groupList}
+            handleSelectChange={handleSelectChange}
+            handleAddMember={handleAddMember}
+            // onClick={console.log(selectedContact)}
+            />
             <DeleteOutlined style={{cursor: 'pointer',color: '#D98723'}}
             onClick={()=>{
               setDeleteOpen(true)
             }}
              /> 
+             </React.Fragment>
+            :''}
                  
           </ListItem>
-       
+        
+        {openDetails? 
+        <React.Fragment>
           <ListItem>
             <ListItemAvatar>
               <Avatar>
@@ -87,7 +140,9 @@ export default function ContactView({
               </Avatar>
             </ListItemAvatar>
            <ListItemText primary={`${currentRow.city} ${currentRow.state_or_province}, ${currentRow.country}, ${currentRow.postal_code}`}  />
-          </ListItem> 
+          </ListItem>
+          </React.Fragment>
+          :''} 
         </List>
         </Paper>
      )

@@ -18,7 +18,7 @@ import jwtDecode from 'jwt-decode';
 
 export default function Groups({current_user}){
 
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(true);
     const [groupopen, setGroupOpen] = useState(false);
     const [groupList, setGroupList] = useState([]);
     const [groupName, setGroupName] = useState('');
@@ -82,19 +82,18 @@ export default function Groups({current_user}){
       }).then(()=>{
         setLoader(false)        
       })
-
     }
 
      return(
         <Paper style={{marginBottom: 10}} >   
-        <List >
+        <List>
           <ListItem style={{
             background: '#010A26',
             color: 'white'
           }}>
             <ListItemText primary="GROUPS" button onClick={handleExpandClick} style={{cursor:'pointer'}}/>
-            <AddBox style={{cursor:'pointer'}} onClick={handleGroupDialog} />
-            {open ? <ExpandLess button onClick={handleExpandClick} style={{cursor:'pointer'}}/> : <ExpandMore button onClick={handleExpandClick} style={{cursor:'pointer'}}/>}
+            <AddBox style={{cursor: 'pointer',color: '#D98723'}} onClick={handleGroupDialog} />
+            {open ? <ExpandLess button onClick={handleExpandClick} style={{cursor: 'pointer',color: '#D98723'}}/> : <ExpandMore button onClick={handleExpandClick} style={{cursor: 'pointer',color: '#D98723'}}/>}
           </ListItem>
           {loader?<LinearProgress />:""}
           <Collapse in={open} timeout="auto" unmountOnExit>
@@ -104,7 +103,7 @@ export default function Groups({current_user}){
           <React.Fragment>
           
           <Divider />
-          <ListItem >
+          <ListItem button >
             <ListItemText primary={list.name}/>
             <DeleteOutlined onClick={()=>
             {
@@ -132,6 +131,7 @@ export default function Groups({current_user}){
          setDeleteOpen = {setDeleteOpen}
          handleDeleteClose = {handleDeleteClose}
          handleDeleteGroup = {handleDeleteGroup}
+         currentRow = {currentRow}
          />
 
         </Paper>
