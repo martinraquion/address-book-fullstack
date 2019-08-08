@@ -43,8 +43,6 @@ export default function ButtonAppBar() {
             color: '#D98723'
           }}>
           <span style={{display:'flex'}}>
-          <span><Icon>supervisor_account</Icon></span>
-          &nbsp;
           <span>{logged_name}</span>
           </span>
           </Button>
@@ -65,10 +63,7 @@ export default function ButtonAppBar() {
           <span>
           <Icon>power_settings_new</Icon>
           </span> 
-          &nbsp;
-         <span>
-         Logout
-         </span>
+        
          </span>
           </Button>
           </Link>

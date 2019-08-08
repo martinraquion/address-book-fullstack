@@ -29,7 +29,9 @@ const useStyles = makeStyles(theme => ({
 
 export default function GroupDialog ({
   groupopen,
-  setGroupOpen
+  setGroupOpen,
+  handleGroupName,
+  handleAddGroup
 }){
     const classes = useStyles();
     return (
@@ -42,10 +44,11 @@ export default function GroupDialog ({
                 <DialogContent>
                       <TextField
                         required
-                        id="group_name"
-                        name="group_name"
+                        id="groupName"
+                        name="groupName"
                         label="Group Name"
                         fullWidth
+                        onChange={handleGroupName}
                       />
                 </DialogContent>
                 <DialogActions>
@@ -57,6 +60,7 @@ export default function GroupDialog ({
                   </Button>
                   <Button
                   color="primary"
+                  onClick={handleAddGroup}
                   >
                   ADD
                   </Button>

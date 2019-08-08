@@ -3,6 +3,7 @@ const massive = require('massive');
 
 const users = require('../controllers/users')
 const cors = require("cors");
+const groups = require('../controllers/groups')
 
 
 
@@ -28,6 +29,10 @@ massive({
   app.get('/api/contact/:id', users.contactById);
   app.delete('/api/contact/:id', users.deleteContact);
   app.patch('/api/update', users.updateContact);
+
+
+  app.post('/api/groups',groups.create);
+  app.get('/api/groups',groups.fetch);
   const PORT = 3001;
   app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
