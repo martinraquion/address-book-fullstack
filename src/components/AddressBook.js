@@ -12,7 +12,6 @@ import AddBox from '@material-ui/icons/AddBox';
 import Create from '@material-ui/icons/CreateOutlined';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Grid from '@material-ui/core/Grid';
-import ArrowRight from '@material-ui/icons/ArrowRight';
 import DeleteOutlined from '@material-ui/icons/DeleteSweepOutlined';
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
@@ -22,6 +21,7 @@ import AddDialog from './dialogs/AddDialog'
 import EditDialog from './dialogs/EditDialog'
 import DeleteDialog from './dialogs/DeleteDialog'
 import ContactView from './views/ContactView'
+import Groups from './views/Groups'
 import 'react-toastify/dist/ReactToastify.min.css'; 
 import { ToastContainer } from 'react-toastify';
 import { toast } from 'react-toastify';
@@ -241,7 +241,7 @@ export default function AddressBook() {
     }}
     >
     <Grid container spacing={5}>
-    <Grid item xs={12} md={openDetails?9:12}>
+    <Grid item xs={12} md={9}>
    
     <span
     style={{
@@ -419,16 +419,30 @@ export default function AddressBook() {
     />
 
     </Grid>
-    {openDetails?
-    <Grid item xs={12} md={3}>
-    <ContactView 
+    <Grid item xs={12} md={3} >
+    <Grid item xs={12} md={12}
+    
+    >
+     <ContactView 
     currentRow={currentRow}
     setDeleteOpen={setDeleteOpen}
     setOpenDetails={setOpenDetails}
+           
     />
+   
     </Grid>
-    : 
-    ''}
+  
+      <Groups
+    currentRow={currentRow}
+    setDeleteOpen={setDeleteOpen}
+    setOpenDetails={setOpenDetails}
+   
+    />
+    <Grid item xs={12} md={12}>
+    
+    </Grid>
+    </Grid>
+    
   
     </Grid>
     </Container>
