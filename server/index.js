@@ -33,6 +33,9 @@ massive({
 
   app.post('/api/groups',groups.create);
   app.get('/api/groups',groups.fetch);
+  app.post('/api/addMember',groups.assign);
+  app.delete('/api/deleteGroup', groups.deleteGroup);
+  
   const PORT = 3001;
   app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);

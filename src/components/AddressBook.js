@@ -436,6 +436,7 @@ export default function AddressBook() {
     currentRow={currentRow}
     setDeleteOpen={setDeleteOpen}
     setOpenDetails={setOpenDetails}
+    current_user={current_user}
    
     />
     <Grid item xs={12} md={12}>

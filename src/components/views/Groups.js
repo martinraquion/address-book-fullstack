@@ -6,31 +6,25 @@ import Divider from '@material-ui/core/Divider';
 import ListItemText from '@material-ui/core/ListItemText';
 import Collapse from '@material-ui/core/Collapse';
 import AddBox from '@material-ui/icons/AddBox';
-
+import DeleteOutlined from '@material-ui/icons/DeleteSweepOutlined';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 
 import GroupDialog from '../dialogs/GroupAdd_Dialog'
+import GroupDeleteDialog from '../dialogs/GroupDelete_Dialog'
 import LinearProgress from '@material-ui/core/LinearProgress';
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
 
-export default function Groups({}){
+export default function Groups({current_user}){
 
     const [open, setOpen] = useState(false);
     const [groupopen, setGroupOpen] = useState(false);
     const [groupList, setGroupList] = useState([]);
     const [groupName, setGroupName] = useState('');
     const [loader, setLoader] = useState(false);
-    
-
-    const token = localStorage.getItem('token');
-    if(!token){
-     window.location.href='/';
-    }
-   
-    var decoded = jwtDecode(token);
-    const current_user = decoded.userId;
+    const [currentRow, setCurrentRow] = useState([]);
+    const [deleteopen, setDeleteOpen] = useState(false);
 
     useEffect(() => {
         axios({
@@ -54,6 +48,12 @@ export default function Groups({}){
       setGroupName(e.target.value)      
     }
 
+    const handleDeleteClose = () => {
+      setDeleteOpen(false)
+    }
+
+    
+
     const handleAddGroup = () => {
       setGroupOpen(false)
       setLoader(true)
@@ -73,6 +73,18 @@ export default function Groups({}){
 
     }
 
+    const handleDeleteGroup = () => {
+      setLoader(true)
+      setDeleteOpen(false)
+      axios({
+        method: 'delete',
+        url: `http://localhost:3001/api/deleteGroup?id=${currentRow.id}`,
+      }).then(()=>{
+        setLoader(false)        
+      })
+
+    }
+
      return(
         <Paper style={{marginBottom: 10}} >   
         <List >
@@ -88,10 +100,19 @@ export default function Groups({}){
           <Collapse in={open} timeout="auto" unmountOnExit>
           
           {groupList.map(list=>(
+          
           <React.Fragment>
+          
           <Divider />
           <ListItem >
             <ListItemText primary={list.name}/>
+            <DeleteOutlined onClick={()=>
+            {
+              setDeleteOpen(true)
+              setCurrentRow(list)
+              // console.log(currentRow)
+            }
+            }/>
           </ListItem>
          </React.Fragment>
           ))}
@@ -105,6 +126,14 @@ export default function Groups({}){
         handleGroupName={handleGroupName}
         handleAddGroup={handleAddGroup}
          />
+
+         <GroupDeleteDialog 
+         deleteopen = {deleteopen}
+         setDeleteOpen = {setDeleteOpen}
+         handleDeleteClose = {handleDeleteClose}
+         handleDeleteGroup = {handleDeleteGroup}
+         />
+
         </Paper>
      
      )
