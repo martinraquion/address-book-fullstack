@@ -10,6 +10,7 @@ import axios from 'axios';
 import 'react-toastify/dist/ReactToastify.min.css'; 
 import { ToastContainer } from 'react-toastify';
 import { toast } from 'react-toastify';
+import Paper from '@material-ui/core/Paper';
 
 
 const useStyles = makeStyles(theme => ({
@@ -19,10 +20,11 @@ const useStyles = makeStyles(theme => ({
     },
   },
   paper: {
-    marginTop: theme.spacing(20),
+    // marginTop: theme.spacing(20),
     display: 'flex',    
     flexDirection: 'column',
     alignItems: 'center',
+    
   },
 
   form: {
@@ -32,6 +34,12 @@ const useStyles = makeStyles(theme => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  container: {
+    marginTop: theme.spacing(20),
+  },
+  spacing: {
+    padding: theme.spacing(4, 4),
+  }
 }));
 
 
@@ -46,9 +54,6 @@ export default function SignIn() {
     validateUn: false, validatePs: false
   })
 
-  // const [token, setToken] = useState('')
-
-  // const [toaster, setToaster] = useState(true)
 
   useEffect(() => {
     const token = localStorage.getItem('token')
@@ -76,8 +81,8 @@ export default function SignIn() {
   }
   }
 
-  const handleSubmit = () =>{
-    
+  const handleSubmit = e =>{
+    e.preventDefault()
     axios('http://localhost:3001/api/login', 
     {
       method: 'post',
@@ -86,16 +91,13 @@ export default function SignIn() {
     .then(res =>{
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('name', (`${res.data.firstName} ${res.data.lastName}`))
-      // setToken({token: res.data.token});
       console.log(res)
       window.location.href = `#/addressbook`
     }
     
     )
     .catch(function(response) {
-      // setNewToken(response.data.newToken);
       toast.error('Incorrect Username or Password')
-      // setToaster(false)
       console.log(response)
     })
     
@@ -104,20 +106,18 @@ export default function SignIn() {
     
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" className={classes.container}>
+    <Paper className={classes.spacing}>
       <CssBaseline />
       <div className={classes.paper}>
-        {/* <Link to='/addressbook'> */}
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        {/* </Link> */}
         <ToastContainer
         autoClose={2500}
         hideProgressBar
-        // position='top-center'
          />
-        <form className={classes.form}>
+        <form className={classes.form} onSubmit={handleSubmit}>
           <TextField
             variant="outlined"
             margin="normal"
@@ -148,18 +148,16 @@ export default function SignIn() {
               onBlur={handleBlur}
             autoComplete="current-password"
           />
-          {/* <Link to='/addressbook'> */}
           <Button
-            // type="submit"
+            type='submit'
             fullWidth
             variant="contained"
-            color="primary"
+            style={{backgroundColor: '#010A26', color:'white'}}
             className={classes.submit}
-            onClick={handleSubmit}
+           
           >
             Sign In
           </Button>
-          {/* </Link>             */}
             <div style={{
                 display: 'flex',
                 justifyContent: 'flex-end'
@@ -170,7 +168,7 @@ export default function SignIn() {
             </div>
         </form>
       </div>
-   
+            </Paper>
     </Container>
 
   );

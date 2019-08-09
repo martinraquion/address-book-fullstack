@@ -9,12 +9,12 @@ import AddBox from '@material-ui/icons/AddBox';
 import DeleteOutlined from '@material-ui/icons/DeleteSweepOutlined';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
-
+import 'react-toastify/dist/ReactToastify.min.css'; 
+import { toast } from 'react-toastify';
 import GroupDialog from '../dialogs/GroupAdd_Dialog'
 import GroupDeleteDialog from '../dialogs/GroupDelete_Dialog'
 import LinearProgress from '@material-ui/core/LinearProgress';
 import axios from 'axios';
-import jwtDecode from 'jwt-decode';
 import GroupMembers from '../dialogs/GroupMembers'
 import Button from '@material-ui/core/Button'
 
@@ -38,7 +38,7 @@ export default function Groups({current_user}){
             setGroupList([...response.data])   
           })
        
-    }, [groupList, currentRow, groupMembers, groupList])
+    }, [groupList, currentRow, groupMembers, groupList, current_user])
 
     const handleExpandClick = () => {
         setOpen(!open);
@@ -69,11 +69,8 @@ export default function Groups({current_user}){
           "user_id": current_user
         }
       }).then(function(response){
-        // setGroupList([...response.data])  
-        // console.log(response) 
         setLoader(false)
-      
-        
+      toast.success(`New Group: ${groupName} has been added`)
       })
 
     }
@@ -85,7 +82,8 @@ export default function Groups({current_user}){
         method: 'delete',
         url: `http://localhost:3001/api/deleteGroup?id=${currentRow.id}`,
       }).then(()=>{
-        setLoader(false)        
+        setLoader(false)  
+        toast.error(`${currentRow.name} has been deleted`)      
       })
     }
 

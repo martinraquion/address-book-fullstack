@@ -16,6 +16,7 @@ import DeleteOutlined from '@material-ui/icons/DeleteSweepOutlined';
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
 //COMPONENTS ADDED
+import Icon from '@material-ui/core/Icon'
 import ButtonAppBar from './Header';
 import AddDialog from './dialogs/AddDialog'
 import EditDialog from './dialogs/EditDialog'
@@ -121,7 +122,7 @@ export default function AddressBook() {
         })
         }
         // console.log(searchKeyword)   
-    }, [contactList, editValues])
+    }, [contactList, editValues, current_user, sortCLick])
    
 
     const handleClickOpen = () => {
@@ -277,8 +278,10 @@ export default function AddressBook() {
             onClick = {handleSortLastName}
             className = {classes.tablecell}
             >
-            Last Name 
-           
+            <span style={{display:'flex', cursor: 'pointer'}}>
+            <span>Last Name </span>
+            <Icon>swap_vert</Icon>
+            </span>
             </TableCell>
             <TableCell align="left" className = {classes.tablecell}>First Name</TableCell>
             <TableCell className = {classes.tablecell}>Mobile Number</TableCell>

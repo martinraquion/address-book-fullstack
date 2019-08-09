@@ -1,4 +1,4 @@
-import React,{useState, useEffect} from 'react'
+import React,{useState} from 'react'
 import Paper from '@material-ui/core/Paper';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -8,7 +8,9 @@ import DeleteOutlined from '@material-ui/icons/DeleteSweepOutlined';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import Icon from '@material-ui/core/Icon';
-import axios from 'axios'
+import axios from 'axios';
+import 'react-toastify/dist/ReactToastify.min.css'; 
+import { toast } from 'react-toastify';
 
 import MemberAdd from '../dialogs/MemberAddDialog'
 
@@ -16,7 +18,6 @@ export default function ContactView({
   currentRow, 
   setDeleteOpen,
   current_user,
-  // setOpenDetails,
   openDetails
 }){
 
@@ -24,20 +25,10 @@ export default function ContactView({
   const [groupList, setGroupList] = useState([])
   const [groupselected, setSelected] = useState('')
 
-  // useEffect(() => {
-  //   axios({
-  //       method: 'get',
-  //       url: `http://localhost:3001/api/selectGroups?id=${currentRow.id}&user_id=${current_user}`,
-  //     }).then(function(response){
-  //       setGroupList([...response.data])   
-  //     })
-   
-  // }, [groupList])
 
   const handleSelectChange  = e =>{
     setSelected(e.target.value)
   } 
-  // console.log(groupList)
   const handleAddMember = () => {
     axios({
       method: 'post',
@@ -48,6 +39,7 @@ export default function ContactView({
       }
     }).then(res=>{
       setMemberOpen(false)
+      toast.info(`${currentRow.first_name} has been added to a group`)
     })
   }
 

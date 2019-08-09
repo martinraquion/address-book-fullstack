@@ -1,18 +1,15 @@
 import React, {useState, useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button'
 import axios from 'axios'
+import 'react-toastify/dist/ReactToastify.min.css'; 
+import { toast } from 'react-toastify';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 import DeleteOutlined from '@material-ui/icons/DeleteOutline'
@@ -48,7 +45,7 @@ groupMembers
     const [groupLoop, setGroupLoop] = useState([])
    useEffect(()=>{
     setGroupLoop([...groupMembers])
-   }, [groupLoop])
+   }, [groupLoop, groupMembers])
     
   //  console.log(groupMembers)
 
@@ -62,12 +59,10 @@ groupMembers
                 {/* <DialogContent> */}
                 
                 <List style={{width:'400px', overflowY:'scroll', height:'400px'}}>
-                {groupLoop.map(list=>(
-                  
-                  <React.Fragment >
-                
+                {(groupLoop.length>0)?
+                groupLoop.map(list=>(
+                <React.Fragment >
                 <ListItem button>
-               
                   <ListItemText primary={list.first_name} />
                   <DeleteOutlined onClick={()=>{
                     axios({
@@ -75,12 +70,20 @@ groupMembers
                    url: `http://localhost:3001/api/deleteMember?id=${list.id}`,
                    }).then(()=>{
                   setMembersOpen(false) 
+                  toast.success(`${list.first_name} has been deleted from your group ${currentRow.name}`)
                    })
                   }}/>
                 </ListItem>
                 <Divider />
                 </React.Fragment>
-                ))}
+                )): 
+                <React.Fragment >
+                <ListItem button>
+                  <ListItemText secondary="No members yet" />
+                </ListItem>
+                <Divider />
+                </React.Fragment>
+                }
                 </List>
               
 

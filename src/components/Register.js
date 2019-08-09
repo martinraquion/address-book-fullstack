@@ -2,13 +2,14 @@ import React, {useState, useEffect} from 'react';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-// import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import {Link} from 'react-router-dom';
 import axios from 'axios'
-// import Paper from '@material-ui/core/Paper'
+import 'react-toastify/dist/ReactToastify.min.css'; 
+import { toast } from 'react-toastify';
+import Paper from '@material-ui/core/Paper';
 
 const useStyles = makeStyles(theme => ({
   '@global': {
@@ -17,7 +18,7 @@ const useStyles = makeStyles(theme => ({
     },
   },
   paper: {
-    marginTop: theme.spacing(20),
+    // marginTop: theme.spacing(20),  
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -28,8 +29,16 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(1),
   },
   submit: {
+    backgroundColor: '#D98723',
+    color:'white',
     margin: theme.spacing(3, 0, 2),
   },
+  spacing: {
+    padding: theme.spacing(4, 4)
+  },
+  container: {
+    marginTop: theme.spacing(10),
+  }
 }));
 
 export default function Form() {
@@ -77,13 +86,15 @@ export default function Form() {
       })
   }}
 
-  const handleSubmit = () =>{
+  const handleSubmit = e =>{
+    e.preventDefault()
     axios('http://localhost:3001/api/register', 
     {
       method: 'post',
       data:inputValues
     })
     .then(res =>{
+      toast.success('Successfull Registered! Sign in to your account')
       window.location.href = `#/`
       console.log(res)
     }
@@ -91,19 +102,21 @@ export default function Form() {
     )
     .catch(res => {
       console.log(res)
+     
     })
   }
 
 
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" className={classes.container}>
+    <Paper className={classes.spacing}>
       <CssBaseline />
       <div className={classes.paper}>
         <Typography component="h1" variant="h5">
             Sign Up
         </Typography>
-        <form className={classes.form} validate>
+        <form className={classes.form} validate onSubmit={handleSubmit}>
         <TextField
             variant="outlined"
             margin="normal"
@@ -173,15 +186,10 @@ export default function Form() {
           />
    
           <Button
-            // type="submit"  
+            type="submit"  
             fullWidth
             variant="contained"
-            color="secondary"
             className={classes.submit}
-            onClick={
-              handleSubmit
-            }
-            // disabled={buttonState}
           >
             Register
           </Button>
@@ -195,7 +203,7 @@ export default function Form() {
             </div>
         </form>
       </div>
-   
+      </Paper>
     </Container>
   );
 }

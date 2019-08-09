@@ -1,16 +1,13 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button'
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
-import Input from '@material-ui/core/Input';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -41,10 +38,8 @@ export default function MemberAdd ({
 //   selectedContact
 }){
     const classes = useStyles();
-    // console.log(selectedContact)
     return (
         <Dialog open={memberopen}
-        //  onClose={handleEditClose} 
         aria-labelledby="form-dialog-title" className={classes.dialog}>
                   <DialogTitle id="form-dialog-title" className={classes.dialogTitle}>
                     Add {currentRow.first_name} to a Group
@@ -56,11 +51,10 @@ export default function MemberAdd ({
                 native
                 fullWidth
                 onChange={handleSelectChange}
-                    // onChange={handleChange('age')}
                  >
                 <option value="" />
                 {groupList.map(res=>(
-                    <option value={res.id} key={res.id}>{res.name}</option>
+                    <option value={res.id} id={res.name} key={res.id}>{res.name}</option>
                 ))}
                 
                
