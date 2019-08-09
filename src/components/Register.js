@@ -161,6 +161,7 @@ export default function Form() {
             margin="normal"
             required
             fullWidth
+            type="email"
             id="validateEm"
             label="Email Address"
             name="email"

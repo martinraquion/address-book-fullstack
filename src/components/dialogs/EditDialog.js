@@ -78,6 +78,7 @@ export default function AddDialog ({
                         id="email"
                         name="email"
                         label="Email Address"
+                        type="email"
                         onChange={handleEditChange}
                         defaultValue={editValues.email}
                         fullWidth
