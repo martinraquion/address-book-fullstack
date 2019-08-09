@@ -24,20 +24,20 @@ export default function ContactView({
   const [groupList, setGroupList] = useState([])
   const [groupselected, setSelected] = useState('')
 
-  useEffect(() => {
-    axios({
-        method: 'get',
-        url: `http://localhost:3001/api/groups?id=${current_user}`,
-      }).then(function(response){
-        setGroupList([...response.data])   
-      })
+  // useEffect(() => {
+  //   axios({
+  //       method: 'get',
+  //       url: `http://localhost:3001/api/selectGroups?id=${currentRow.id}&user_id=${current_user}`,
+  //     }).then(function(response){
+  //       setGroupList([...response.data])   
+  //     })
    
-  }, [groupList])
+  // }, [groupList])
 
   const handleSelectChange  = e =>{
     setSelected(e.target.value)
   } 
-
+  // console.log(groupList)
   const handleAddMember = () => {
     axios({
       method: 'post',
@@ -46,7 +46,9 @@ export default function ContactView({
         "contact_id": currentRow.id,
         "group_id": groupselected
       }
-    }).then(res=>console.log(res))
+    }).then(res=>{
+      setMemberOpen(false)
+    })
   }
 
      return(
@@ -64,7 +66,15 @@ export default function ContactView({
             {openDetails?
             <React.Fragment>
             <Icon style={{cursor: 'pointer',color: '#D98723', marginRight: '10px'}}
-            onClick={()=>setMemberOpen(true)}
+            onClick={()=>{setMemberOpen(true)
+               axios({
+              method: 'get',
+              url: `http://localhost:3001/api/selectGroups?id=${currentRow.id}&user_id=${current_user}`,
+              }).then(function(response){
+              setGroupList([...response.data])   
+              })
+            
+            }}
             >group_add</Icon>
             <MemberAdd 
             // selectedContact={selectsedContact}

@@ -60,7 +60,7 @@ export default function MemberAdd ({
                  >
                 <option value="" />
                 {groupList.map(res=>(
-                    <option value={res.id}>{res.name}</option>
+                    <option value={res.id} key={res.id}>{res.name}</option>
                 ))}
                 
                

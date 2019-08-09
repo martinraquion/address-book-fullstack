@@ -80,7 +80,7 @@ export default function AddressBook() {
       email: "",
       city:"",
       state_or_province: "",
-      postal_code: "",
+      postal_code: 0,
       country: ""
     });
     const [editValues, setEditValues] = useState({
@@ -168,7 +168,7 @@ export default function AddressBook() {
               data: inputValues,
           }).then(()=>{
             setLoaderState(false);
-            
+            setOpenDetails(true)
             setCurrentRow(inputValues)
             toast.success(`${inputValues.first_name} has been succesfully added to your contacts`);
             }
@@ -400,6 +400,7 @@ export default function AddressBook() {
         handleClose={handleClose}
         setCurrentRow={setCurrentRow}
         open={open}
+        
     />
 
     <EditDialog 

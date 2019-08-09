@@ -15,6 +15,8 @@ import GroupDeleteDialog from '../dialogs/GroupDelete_Dialog'
 import LinearProgress from '@material-ui/core/LinearProgress';
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
+import GroupMembers from '../dialogs/GroupMembers'
+import Button from '@material-ui/core/Button'
 
 export default function Groups({current_user}){
 
@@ -25,6 +27,8 @@ export default function Groups({current_user}){
     const [loader, setLoader] = useState(false);
     const [currentRow, setCurrentRow] = useState([]);
     const [deleteopen, setDeleteOpen] = useState(false);
+    const [membersopen, setMembersOpen] = useState(false);
+    const [groupMembers, setGroupMembers] = useState([]);
 
     useEffect(() => {
         axios({
@@ -34,7 +38,7 @@ export default function Groups({current_user}){
             setGroupList([...response.data])   
           })
        
-    }, [groupList])
+    }, [groupList, currentRow, groupMembers, groupList])
 
     const handleExpandClick = () => {
         setOpen(!open);
@@ -68,6 +72,7 @@ export default function Groups({current_user}){
         // setGroupList([...response.data])  
         // console.log(response) 
         setLoader(false)
+      
         
       })
 
@@ -83,6 +88,8 @@ export default function Groups({current_user}){
         setLoader(false)        
       })
     }
+
+   
 
      return(
         <Paper style={{marginBottom: 10}} >   
@@ -100,18 +107,40 @@ export default function Groups({current_user}){
           
           {groupList.map(list=>(
           
-          <React.Fragment>
+          <React.Fragment key={list.id}>
           
           <Divider />
-          <ListItem button >
+          <ListItem >
             <ListItemText primary={list.name}/>
-            <DeleteOutlined onClick={()=>
+            
+            <DeleteOutlined 
+             style={{color:'#D98723'}}
+             onClick={()=>
             {
               setDeleteOpen(true)
               setCurrentRow(list)
               // console.log(currentRow)
+              // console.log(groupMembers) 
             }
             }/>
+            <Button style={{backgroundColor:'#D98723', color:'white', marginLeft: '20px'}}
+            onClick={()=>{
+           
+           setCurrentRow(list)
+
+           axios({
+           method: 'get',
+           url: `http://localhost:3001/api/groupMembers?id=${list.id}`,
+            }).then(function(response){
+              
+           setGroupMembers([...response.data])  
+          
+            }).then(()=>{
+             setMembersOpen(true);}
+            )
+            
+           }}
+            >VIEW</Button>
           </ListItem>
          </React.Fragment>
           ))}
@@ -119,6 +148,14 @@ export default function Groups({current_user}){
           </Collapse>
 
         </List>
+        
+        <GroupMembers 
+          membersopen={membersopen}
+          setMembersOpen={setMembersOpen}
+          currentRow={currentRow}
+          groupMembers={groupMembers}
+        />
+
         <GroupDialog 
         groupopen = {groupopen}
         setGroupOpen ={setGroupOpen}
